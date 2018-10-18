@@ -6,6 +6,18 @@ output: pdf_document
 
 ## Question 1
 
+```{r}
+library(R.matlab)
+fmri.p1 <- readMat("data/data-science-P1.mat")
+fmri <- do.call(rbind, lapply(fmri.p1$data, unlist))
+colnames <- 1:dim(fmri)[2]
+```
+
+```{r}
+dim(fmri)
+fmri[172, 2014]
+```
+
 ## Question 2
 
 ## Question 3
