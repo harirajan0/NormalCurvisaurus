@@ -28,6 +28,8 @@ The number of principal components is determined with min(n-1, p). In this case,
 
 ## Question 5
 
+A biplot would be very bad because our data is very high dimensional, so we have a lot of principle components. The vectors representing the principal components would overlap each other and we wouldn't be able to tell what's going on around the source of the vectors. 
+
 ## Question 6
 
 ## Question 7
