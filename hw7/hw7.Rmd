@@ -24,6 +24,8 @@ fmri[172, 2014]
 
 ## Question 4
 
+The number of principal components is determined with min(n-1, p). In this case, we need the min of 360-1 and 21764, which is 359. 
+
 ## Question 5
 
 ## Question 6
