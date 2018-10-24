@@ -96,4 +96,19 @@ The plots from 2 and 6 are different. This is because they are graphing differen
 
 ## Question 8
 
+The optimal number of principal components is two, since this is the smallest number of principle components at which an adequate amount of variability is explained.
+
+```{r}
+screeplot(fmri.pca, type= "lines", main="Screeplot for FMRI") # create a screeplot for FMRI with lines
+```
+
 ## Question 9
+```{r}
+plot(x=fmri.pca$x[,1], type="n", ylim=c(-100,100), ylab= "PC1")
+colors= c("red", "blue", "green", "orange", "purple", "pink", "black", "yellow", "cyan", "powderblue")
+bins= cut(fmri.pca$x[,1],10, labels=colors)
+
+
+points(fmri.pca$x[,1], col=bins)
+
+```
