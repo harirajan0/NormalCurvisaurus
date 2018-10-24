@@ -7,18 +7,48 @@ output: pdf_document
 ## Question 1
 
 ```{r}
+# load the R.matlab package
 library(R.matlab)
+# read the .mat file and store contents in fmri.p1
 fmri.p1 <- readMat("data/data-science-P1.mat")
+# unlist each element in the dataset and use rbind to combine into a data fram
 fmri <- do.call(rbind, lapply(fmri.p1$data, unlist))
+# store the coumn names for the fmri data
 colnames <- 1:dim(fmri)[2]
 ```
 
 ```{r}
 dim(fmri)
+```
+
+<br /> As indicated above, the diminesions are `360 X 21764` as expected. 
+
+```{r}
 fmri[172, 2014]
 ```
 
+<br /> As indicated above, the value of `fmri[172,2014]` is $\approx -0.07$. 
+
 ## Question 2
+
+```{r}
+# load the scatterplot3d package
+library(scatterplot3d) 
+# total number of features
+p <- 21764 
+# store the coordinates needed for the scatterplot in col2coord
+col2coord <- fmri.p1$meta[[8]]
+# compute the means of each column in the fmri data
+ave.colMeans <- colMeans(fmri)
+# finds the rank of each voxel
+rank.fmri <- rank(ave.colMeans)
+# we go in reverse order due to the rank() function to get the  300 most active voxels
+scatterplot3d(x=col2coord[rank.fmri>(p-300),],pch=10,
+  xlab="x", ylab="y", zlab="z", main="300 most active voxels")
+# repeat as above to plot the 650 most active voxels
+scatterplot3d(x=col2coord[rank.fmri>(p-650),],pch=10,
+  xlab="x", ylab="y", zlab="z", main="650 most active voxels")
+```
 
 ## Question 3
 
