@@ -45,6 +45,7 @@ rank.fmri <- rank(ave.colMeans)
 # we go in reverse order due to the rank() function to get the  300 most active voxels
 scatterplot3d(x=col2coord[rank.fmri>(p-300),],pch=10,
   xlab="x", ylab="y", zlab="z", main="300 most active voxels")
+
 # repeat as above to plot the 650 most active voxels
 scatterplot3d(x=col2coord[rank.fmri>(p-650),],pch=10,
   xlab="x", ylab="y", zlab="z", main="650 most active voxels")
@@ -77,7 +78,18 @@ The number of principal components is determined with min(n-1, p). In this case,
 A biplot would be very bad because our data is very high dimensional, so we have a lot of principle components. The vectors representing the principal components would overlap each other and we wouldn't be able to tell what's going on around the source of the vectors. 
 
 ## Question 6
+```{r}
 
+# This code is finding the number 300th highest loading value for the first PC. We sort the absolute values of the loadings for PC1. Then, we find the 300th highest to get the cutoff for the top 300. 
+
+sort(abs(fmri.latent.sem[,1]), decreasing = TRUE)[[300]]
+
+
+# We plot the 300 voxel coordinates which have indices matching the top 300 absolute values of the PC1 loadings. 
+
+scatterplot3d(x=col2coord[(abs(fmri.latent.sem[,1]) >= 0.01972066),],pch=10,
+  xlab="x", ylab="y", zlab="z", main="300 most active voxels")
+```
 ## Question 7
 
 ## Question 8
