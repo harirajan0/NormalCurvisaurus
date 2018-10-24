@@ -22,6 +22,22 @@ fmri[172, 2014]
 
 ## Question 3
 
+```{r}
+
+# Doing the PCA
+fmri.pca = prcomp(fmri)
+
+# Obtaining the loading vectors for each PCA
+fmri.latent.sem = fmri.pca$rotation
+
+# To obtain the variances, we first find the standard deviations for all of the principal components. We square them to obtain the variances because variance = sd^2. 
+variances = fmri.pca$sdev^2
+
+# To get the fraction of variance for PC1, we divide the variance for PC1 by the sum of variances across all principle components. 
+variances[1]/sum(variances)
+
+```
+
 ## Question 4
 
 The number of principal components is determined with min(n-1, p). In this case, we need the min of 360-1 and 21764, which is 359. 
