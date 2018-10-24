@@ -92,6 +92,8 @@ scatterplot3d(x=col2coord[(abs(fmri.latent.sem[,1]) >= 0.01972066),],pch=10,
 ```
 ## Question 7
 
+The plots from 2 and 6 are different. This is because they are graphing different things. The plot from 2 is simply graphing the voxels that have the 300 top average row values from fmri. The plot from 6 is graphing the voxels with the top 300 most extreme loadings, which relate to the top 300 most correlated coefficients to PC1. 
+
 ## Question 8
 
 ## Question 9
