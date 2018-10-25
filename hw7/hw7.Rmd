@@ -105,12 +105,10 @@ screeplot(fmri.pca, type= "lines", main="Screeplot for FMRI") # create a screepl
 ```
 
 ## Question 9
+The plot is a mass centered approximately around (25, 30, 12.5).
 ```{r}
 colors= c("red", "blue", "green", "orange", "purple", "pink", "blueviolet", "powderblue", "yellow", "cyan")
-bins= cut(fmri.latent.sem[,1],10, labels=colors)
-
-
+bins= cut(fmri.latent.sem[,1],10, labels=colors) # divide the first PC into 10 bins and assign each bin a color
 scatterplot3d(x=col2coord,pch=10,
-  xlab="x", ylab="y", zlab="z", main="Voxels binned by PC1", color = bins)
-
+  xlab="x", ylab="y", zlab="z", main="Voxels binned by PC1", color = bins) # create3d plot of first PC with color indicating the loadings of each voxel
 ```
