@@ -19,6 +19,8 @@ colnames <- 1:dim(fmri)[2]
 
 ```{r}
 dim(fmri)
+
+fmri[1,]
 ```
 
 <br /> As indicated above, the diminesions are `360 X 21764` as expected. 
@@ -104,11 +106,11 @@ screeplot(fmri.pca, type= "lines", main="Screeplot for FMRI") # create a screepl
 
 ## Question 9
 ```{r}
-plot(x=fmri.pca$x[,1], type="n", ylim=c(-100,100), ylab= "PC1")
-colors= c("red", "blue", "green", "orange", "purple", "pink", "black", "yellow", "cyan", "powderblue")
-bins= cut(fmri.pca$x[,1],10, labels=colors)
+colors= c("red", "blue", "green", "orange", "purple", "pink", "blueviolet", "powderblue", "yellow", "cyan")
+bins= cut(fmri.latent.sem[,1],10, labels=colors)
 
 
-points(fmri.pca$x[,1], col=bins)
+scatterplot3d(x=col2coord,pch=10,
+  xlab="x", ylab="y", zlab="z", main="Voxels binned by PC1", color = bins)
 
 ```
