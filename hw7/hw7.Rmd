@@ -4,7 +4,9 @@ author: "Hari Rajan"
 output: pdf_document
 ---
 
-## Question 1
+## Question 1 
+
+<br/> harirajan0
 
 ```{r}
 # load the R.matlab package
@@ -31,6 +33,8 @@ fmri[172, 2014]
 
 ## Question 2
 
+<br/> harirajan0
+
 ```{r}
 # load the scatterplot3d package
 library(scatterplot3d) 
@@ -53,6 +57,8 @@ scatterplot3d(x=col2coord[rank.fmri>(p-650),],pch=10,
 
 ## Question 3
 
+<br/> calvin298, audreyametz
+
 ```{r}
 
 # Doing the PCA
@@ -71,13 +77,20 @@ variances[1]/sum(variances)
 
 ## Question 4
 
+<br/> calvinm298
+
 The number of principal components is determined with min(n-1, p). In this case, we need the min of 360-1 and 21764, which is 359. 
 
 ## Question 5
 
+<br/> calvinm298
+
 A biplot would be very bad because our data is very high dimensional, so we have a lot of principle components. The vectors representing the principal components would overlap each other and we wouldn't be able to tell what's going on around the source of the vectors. 
 
 ## Question 6
+
+<br/> giraudp, harirajan0
+
 ```{r}
 
 # This code is finding the number 300th highest loading value for the first PC. We sort the absolute values of the loadings for PC1. Then, we find the 300th highest to get the cutoff for the top 300. 
@@ -90,11 +103,16 @@ sort(abs(fmri.latent.sem[,1]), decreasing = TRUE)[[300]]
 scatterplot3d(x=col2coord[(abs(fmri.latent.sem[,1]) >= 0.01972066),],pch=10,
   xlab="x", ylab="y", zlab="z", main="300 most active voxels")
 ```
+
 ## Question 7
 
-The plots from 2 and 6 are different. This is because they are graphing different things. The plot from 2 is simply graphing the voxels that have the 300 top average row values from fmri. The plot from 6 is graphing the voxels with the top 300 most extreme loadings, which relate to the top 300 most correlated coefficients to PC1. 
+<br/> giraudp
+
+The plots from 2 and 6 are different. This is because they are graphing different things. The plot from 2 is simply graphing the voxels that have the 300 top average row values from fmri. The plot from 6 is graphing the voxels with the top 300 most extreme loadings, which relate to the top 300 most correlated coefficients to PC1, so this is clearly distinct from plotting the voxels that have the highest average values from the fmri data.  
 
 ## Question 8
+
+<br /> audreyametz
 
 The optimal number of principal components is two, since this is the smallest number of principle components at which an adequate amount of variability is explained.
 
@@ -103,11 +121,12 @@ screeplot(fmri.pca, type= "lines", main="Screeplot for FMRI") # create a screepl
 ```
 
 ## Question 9
-```{r}
-#scatterplot3d(x=col2coord, pch=6, xlab="x", ylab="y", zlab="z", color=solors)
-colors= c("red", "blue", "green", "orange", "purple", "pink", "black", "yellow", "cyan", "powderblue")
-#scatterplot3d(x=col2coord, pch=6, xlab="x", ylab="y", zlab="z", color=solors)
-bins= cut(fmri.pca$x[,1],10, labels=colors)
-bins
 
+<br /> audreyametz, calvinm298
+
+```{r}
+colors= c("red", "blue", "green", "orange", "purple", "pink", "blueviolet", "powderblue", "yellow", "cyan")
+bins= cut(fmri.latent.sem[,1],10, labels=colors)
+scatterplot3d(x=col2coord,pch=10,
+  xlab="x", ylab="y", zlab="z", main="Voxels binned by PC1", color = bins)
 ```
