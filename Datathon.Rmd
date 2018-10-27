@@ -1,0 +1,83 @@
+---
+title: "Datathon"
+output: html_document
+---
+
+```{r}
+#assigning variables to imported data
+first.session = read.csv("dataset/first_session.csv")
+user.engagement = read.csv("dataset/user_engagement.csv")
+user.profile = read.csv("dataset/user_profile.csv")
+```
+
+
+```{r}
+#view and summarize the data to analyze 
+View(first.session)
+View(user.engagement)
+View(user.profile)
+summary(first.session)
+summary(user.engagement)
+summary(user.profile)
+```
+
+```{r}
+#merged the data for plotting analysis 
+merged.session.profile = merge(user.profile, first.session, by = "user_id")
+View(merged.session.profile)
+```
+
+```{r}
+#merged all into one --- Takes a long time 
+all.merged = merge(merged.session.profile, user.engagement, by = "user_id")
+```
+
+
+```{r}
+#I am making a sub data set of the data we believe can be correlated. Because the plots are small, I am making two sets that we will then plot using pairs. The variables that appear to be correlated will then be regressed. 
+
+
+possibleCorrelations1 = merged.session.profile[, c("max_cc_utilization_ratio", "avg_cc_utilization_ratio", "count_tradelines_closed_accounts", "count_total_tradelines_opened_24_months", "count_open_installment_accounts_24_months", "total_tradelines_amount_past_due", "age_bucket", "tradelines_avg_days_since_opened", "credit_score_bucket")]
+
+possibleCorrelations2 = merged.session.profile[, c("credit_score_bucket", "count_tradelines_condition_derogatory", "count_tradelines_open_collection_accounts", "max_cc_limit", "tradelines_avg_days_since_opened", "total_student_loans_balance")]
+
+#take a random sample of the merged data of size 200,000 for graphical exploritory analysis. The full data set was too large, but 200,000 will still allow us to see trends in the data. 
+
+sample2 = possibleCorrelations2[sample(nrow(merged.session.profile), 200000),]
+
+panel.cor <- function(x, y){
+    usr <- par("usr"); on.exit(par(usr))
+    par(usr = c(0, 1, 0, 1))
+    r <- round(cor(x, y), digits=2)
+    txt <- paste0("R = ", r)
+    cex.cor <- 0.8/strwidth(txt)
+    text(0.5, 0.5, txt, cex = cex.cor * r)
+}
+
+
+#we can see which variables in our linear model have strong correlations with one another. We can use the correlations to eliminate variables in the model with high correlation. For example open collection acocunts and derogatory tradelines are very correlated and we were able to eliminate open collection accounts from the linear model without hurting our fit.  
+pairs(sample2[,1:6], lower.panel = panel.cor)
+
+
+sample1 = possibleCorrelations1[sample(nrow(merged.session.profile), 200000),]
+
+panel.cor <- function(x, y){
+    usr <- par("usr"); on.exit(par(usr))
+    par(usr = c(0, 1, 0, 1))
+    r <- round(cor(x, y), digits=2)
+    txt <- paste0("R = ", r)
+    cex.cor <- 0.8/strwidth(txt)
+    text(0.5, 0.5, txt, cex = cex.cor * r)
+}
+
+pairs(sample1[,1:9], lower.panel = panel.cor)
+
+```
+
+```{r}
+#merge user profile with user engagement
+merged.profile.engagement = merge(user.profile, user.engagement, by = "user_id")
+View(user.engagement)
+
+
+```
