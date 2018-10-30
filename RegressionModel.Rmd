@@ -1,25 +1,14 @@
----
-title: "User Demograpic on First Session Engagement"
-author: "Audreya Metz"
-date: "October 27, 2018"
-output: pdf_document
----
-
 ```{r setup, include=FALSE}
 
-```
-
-
-## Exploratory Data Analysis
-
-```{r demographics}
+# gender dummy variable
 user_profile$gender_cat[user_profile$gender=="Male"]= 0
 user_profile$gender_cat[user_profile$gender=="Female"]= 1
 
-
+# homeowner dummy variable
 user_profile$home_cat[user_profile$is_homeowner=="False"]= 0
 user_profile$home_cat[user_profile$is_homeowner=="True"]= 1
 
+# make age categorical into numeric
 user_profile$age_cat[user_profile$age_bucket=="(15.0, 20.0]"]= 0
 user_profile$age_cat[user_profile$age_bucket=="(20.0, 25.0]"]= 1
 user_profile$age_cat[user_profile$age_bucket=="(25.0, 30.0]"]= 2
@@ -38,6 +27,7 @@ user_profile$age_cat[user_profile$age_bucket=="(85.0, 90.0]"]= 14
 user_profile$age_cat[user_profile$age_bucket=="(90.0, 95.0]"]= 15
 user_profile$age_cat[user_profile$age_bucket=="(95.0, 100.0]"]= 16
 
+# convert credit categorical into numeric
 user_profile$credit_cat[user_profile$credit_score_bucket=="(495.0, 500.0]"]= 0
 user_profile$credit_cat[user_profile$credit_score_bucket=="(500.0, 505.0]"]= 1
 user_profile$credit_cat[user_profile$credit_score_bucket=="(505.0, 510.0]"]= 2
@@ -60,7 +50,6 @@ user_profile$credit_cat[user_profile$credit_score_bucket=="(585.0, 590.0]"]= 18
 user_profile$credit_cat[user_profile$credit_score_bucket=="(590.0, 595.0]"]= 19
 user_profile$credit_cat[user_profile$credit_score_bucket=="(595.0, 600.0]"]= 20
 user_profile$credit_cat[user_profile$credit_score_bucket=="(600.0, 605.0]"]= 21
-
 user_profile$credit_cat[user_profile$credit_score_bucket=="(605.0, 610.0]"]= 22
 user_profile$credit_cat[user_profile$credit_score_bucket=="(610.0, 615.0]"]= 23
 user_profile$credit_cat[user_profile$credit_score_bucket=="(615.0, 620.0]"]= 24
@@ -81,7 +70,6 @@ user_profile$credit_cat[user_profile$credit_score_bucket=="(685.0, 690.0]"]= 38
 user_profile$credit_cat[user_profile$credit_score_bucket=="(690.0, 695.0]"]= 39
 user_profile$credit_cat[user_profile$credit_score_bucket=="(695.0, 600.0]"]= 40
 user_profile$credit_cat[user_profile$credit_score_bucket=="(700.0, 705.0]"]= 41
-
 user_profile$credit_cat[user_profile$credit_score_bucket=="(705.0, 710.0]"]= 42
 user_profile$credit_cat[user_profile$credit_score_bucket=="(710.0, 715.0]"]= 43
 user_profile$credit_cat[user_profile$credit_score_bucket=="(715.0, 720.0]"]= 44
@@ -102,13 +90,12 @@ user_profile$credit_cat[user_profile$credit_score_bucket=="(785.0, 790.0]"]= 58
 user_profile$credit_cat[user_profile$credit_score_bucket=="(790.0, 795.0]"]= 59
 user_profile$credit_cat[user_profile$credit_score_bucket=="(795.0, 800.0]"]= 60
 
+# final regresson model
+finalreg <- lm(credit_cat~ home_cat + count_tradelines_open_collection_accounts + max_cc_limit + tradelines_avg_days_since_opened, user_profile)
 
-firstreg <- lm(credit_cat~ home_cat + count_tradelines_open_collection_accounts + max_cc_limit + tradelines_avg_days_since_opened, user_profile)
+# summary of final regression model
+summary(finalreg)
 
-summary(firstreg)
-
-plot(predict(firstreg),residuals(firstreg))
+# plot the residuals
+plot(predict(finaltreg),residuals(finalreg), main= "Regression Residuals")
 ```
-
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
