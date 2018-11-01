@@ -1,5 +1,8 @@
 ---
-title: "Writeup"
+title: "Credit Sesame Consumer Report"
+author: Audreya Metz, Calvin Ma, Hari Rajan, Paul Giroud
+abstract: "Determine customers"
+keywords: "pandoc, r markdown, knitr"
 output: pdf_document
 ---
 
