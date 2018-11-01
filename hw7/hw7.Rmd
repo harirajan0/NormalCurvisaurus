@@ -20,7 +20,6 @@ colnames <- 1:dim(fmri)[2]
 ```{r}
 dim(fmri)
 
-fmri[1,]
 ```
 
 <br /> As indicated above, the diminesions are `360 X 21764` as expected. 
