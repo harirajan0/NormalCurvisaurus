@@ -1,0 +1,118 @@
+---
+title: "datathon_pca"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+#Reading in the data and preprocessing it
+user_data = read.csv('user_profile.csv')
+summary(user_data)
+
+#Removing columns that are redundant and cover the same information
+data.pre = user_data[-c(1, 3, 4, 5, 27, 28, 36)]
+
+#ishomeowner, gender(remove unisex), remove NA from 8, 9, 10, 27, 28
+data.pre = subset(data.pre, (data.pre$gender == 'Male' | data.pre$gender == 'Female'))
+data.pre= na.omit(data.pre)
+data.pre$gender = data.pre$gender == 'Female'
+data.pre$is_homeowner = data.pre$is_homeowner == 'True'
+cols <- sapply(data.pre, is.logical)
+data.pre[,cols] <- lapply(data.pre[,cols], as.numeric)
+
+#turning the buckets into continous values - we average the bucket's min & max to the middle value
+decode_bucket <- function(fctr) {
+  fctr <- gsub("[()]", '', fctr)
+  fctr <- gsub("\\]", '', fctr)
+  bounds <- strsplit(fctr, ", ")
+  return(mean(as.numeric(bounds[[1]])))
+}
+data.pre$age = unlist(lapply(data.pre$age_bucket, FUN = decode_bucket))
+data.pre$credit_score = unlist(lapply(data.pre$credit_score_bucket, FUN = decode_bucket))
+data.pre = na.omit(data.pre)
+
+#removing bucketed columns
+data.pre = data.pre[-c(31,32)]
+
+#data.pre is our full dataset 
+summary(data.pre)
+
+#continue removing features that are unnecessary - see report for reasoning
+data.pre.cont = data.pre[-c(1, 5, 6, 9, 12, 13, 14, 19, 20, 23, 27, 29)]
+
+#doing PCA over the preprocessed dataset
+data.pca = prcomp(data.pre.cont, scale=TRUE)
+loadings = data.pca$rotation
+head(loadings)
+
+#plotting PC1 vs. PC2
+plot(data.pca$x[,1:2])
+
+#biplot to see the loadings
+biplot(data.pca, scale=0, cex=0.7)
+
+#screeplot for top loadings 
+screeplot(data.pca, type = "lines")
+
+#More EDA, seeing which variables have a relationship with credit score - used to determine features in Linear Regression
+plot(x = data.pre.cont$tradelines_avg_days_since_opened, y = data.pre.cont$credit_score) #no 
+plot(x = data.pre.cont$count_tradelines_closed_accounts, y = data.pre.cont$credit_score) #maybe
+plot(x = data.pre.cont$count_total_tradelines_opened_24_months, y = data.pre.cont$credit_score) #maybe
+plot(x = data.pre.cont$count_tradelines_condition_derogatory, y = data.pre.cont$credit_score) #yes
+plot(x = data.pre.cont$count_open_installment_accounts_24_months, y = data.pre.cont$credit_score) #maybe
+plot(x = data.pre.cont$count_tradelines_opened_accounts, y = data.pre.cont$credit_score) #no
+plot(x = data.pre.cont$count_tradelines_open_secured_loans, y = data.pre.cont$credit_score) #maybe
+plot(x = data.pre.cont$count_tradelines_open_unsecured_loans, y = data.pre.cont$credit_score) #maybe
+plot(x = data.pre.cont$total_tradelines_amount_past_due, y = data.pre.cont$credit_score) #yes
+plot(x = data.pre.cont$total_tradelines_open_balance, y = data.pre.cont$credit_score, xlim = c(0, 1000000)) #no
+plot(x = data.pre.cont$max_cc_limit, y = data.pre.cont$credit_score, xlim = c(0, 150000)) #yes
+plot(x = data.pre.cont$total_mortgage_loans_balance, y = data.pre.cont$credit_score, xlim = c(0, 4000000)) #no
+plot(x = data.pre.cont$total_auto_loans_balance, y = data.pre.cont$credit_score) #no
+plot(x = data.pre.cont$total_student_loans_balance, y = data.pre.cont$credit_score) #yes
+plot(x = data.pre.cont$count_bankruptcy, y = data.pre.cont$credit_score) #yes
+plot(x = data.pre.cont$age, y = data.pre.cont$credit_score) #no
+
+############################Clustering 
+
+#reading in data
+user_engage_data = read.csv('user_engagement.csv')
+
+summary(user_engage_data)
+
+#We are taking the click counts for differnt types of pages
+user_engage_actions = user_engage_data[c(21, 22, 23, 24, 25, 26)]
+
+#calculating the within some of squares for various clustering amounts - we're using this to determine a good number of clusters
+k.max <- 20
+data <- user_engage_actions
+wss <- sapply(1:k.max, 
+              function(k){kmeans(data, k, nstart=50,iter.max = 15 )$tot.withinss})
+
+#ploting the wws vs. number of clusters. 
+plot(1:k.max, wss,
+     type="b", pch = 19, frame = FALSE, 
+     xlab="Number of clusters K",
+     ylab="Total within-clusters sum of squares")
+
+
+
+#clustering the user_engage_actions
+kmeanclusters = kmeans(user_engage_actions, 5, nstart=20)
+
+kmeanclusters
+
+#from the clustering, we can see that there are two clusters with larger values in particular columns (see report for interpretation). We want the user IDs of the people who had the inflated column values. 
+click_credit_card = user_engage_data[which(kmeanclusters$cluster == 6),]
+click_personal_loan = user_engage_data[which(kmeanclusters$cluster == 7),]
+
+#creating a subset of user demographics that relate to the people with inflated column values
+click_credit_users = subset(data.pre, data.pre$user_id %in% click_credit_card$user_id)
+click_loan_users = subset(data.pre, data.pre$user_id %in% click_personal_loan$user_id)
+
+#comparing the user demographics of the two groups of people
+summary(click_credit_users)
+summary(click_loan_users)
+
+```
