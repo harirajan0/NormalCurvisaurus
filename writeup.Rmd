@@ -6,3 +6,20 @@ keywords: "pandoc, r markdown, knitr"
 output: pdf_document
 ---
 
+# 1 Introduction
+
+# 2 Data set
+
+## 2.1 Exploratory Data Analysis
+
+# 3 Methods
+
+# 4 Applications
+
+## 4.1 Applications for PCA
+
+## 4.2 Applications for Regression
+
+## 4.3 Applications for $k$-means Clustering
+
+# 5 Discussion
