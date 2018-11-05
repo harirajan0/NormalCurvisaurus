@@ -1,9 +1,19 @@
 ---
 title: "Credit Sesame Consumer Report"
-author: Audreya Metz, Calvin Ma, Hari Rajan, Paul Giroud
-abstract: "Determining the appropriate consumer to give loans to is a difficult task that can depend on many factors. Some of which directly impact what a company may think of you such as the amount past due on accounts, your open balance, etc. Other factors are more implicit, but could also determine whether or not you'd be a good candidate to give a loan to. We analyzed data from Credit Sesame, a company that calculate credit scores to determine options for credit cards, mortgage rates and loans. Our goal with the dataset was to predict credit score from various features using a linear regression. Additionally, we looked at the user demographics for the website to analyze the traffic that the website is getting by using clustering. "
-keywords: "pandoc, r markdown, knitr"
-output: pdf_document
+author: "Audreya Metz, Calvin Ma, Hari Rajan, Paul Giroud"
+keywords: pandoc, r markdown, knitr
+output:
+  html_document:
+    df_print: paged
+abstract: 'Determining the appropriate consumer to give loans to is a difficult task
+  that can depend on many factors. Some of which directly impact what a company may
+  think of you such as the amount past due on accounts, your open balance, etc. Other
+  factors are more implicit, but could also determine whether or not you''d be a good
+  candidate to give a loan to. We analyzed data from Credit Sesame, a company that
+  calculate credit scores to determine options for credit cards, mortgage rates and
+  loans. Our goal with the dataset was to predict credit score from various features
+  using a linear regression. Additionally, we looked at the user demographics for
+  the website to analyze the traffic that the website is getting by using clustering. '
 ---
 
 # 1 Introduction
@@ -14,33 +24,31 @@ output: pdf_document
 
 ## 2.2 Preprocessing 
 
-### 2.2.1 PCA
+* 2.2.1 PCA
 
-### 2.2.2 Regression
+* 2.2.2 Regression
 
-### 2.2.3 $k$-Means
+* 2.2.3 $k$-Means
 
-### 2.2.4 Lasso
+* 2.2.4 Lasso
 
 # 3 Methods
 
-## 3.1 PCA
+* 3.1 PCA
 
-## 3.2 Regression
+* 3.2.1 Linear Regression
 
-### 3.2.1 Linear Regression
+* 3.2.2 Lasso
 
-### 3.2.2 Lasso
-
-## 3.3 $k$-Means
+* 3.3 $k$-Means
 
 # 4 Applications
 
-## 4.1 Applications for PCA
+* 4.1 Applications for PCA
 
-## 4.2 Applications for Regression
+* 4.2 Applications for Regression
 
-## 4.3 Applications for $k$-means Clustering
+* 4.3 Applications for $k$-means Clustering
 
 # 5 Discussion
 
