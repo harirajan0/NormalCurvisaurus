@@ -49,7 +49,7 @@ data.pre.pca = data.pre[-c(1, 5, 6, 9, 12, 13, 14, 19, 20, 23, 27, 29)]
 data.pca = prcomp(data.pre.pca, scale=TRUE)
 loadings = data.pca$rotation
 loadings
-head(loadings)
+head(loadings[,1:5])
 
 #plotting PC1 vs. PC2
 plot(data.pca$x[,1:2])
@@ -61,22 +61,22 @@ biplot(data.pca, scale=0, cex=0.7)
 screeplot(data.pca, type = "lines")
 
 #More EDA, seeing which variables have a relationship with credit score - used to determine features in Linear Regression
-plot(x = data.pre.cont$tradelines_avg_days_since_opened, y = data.pre.cont$credit_score) #no 
-plot(x = data.pre.cont$count_tradelines_closed_accounts, y = data.pre.cont$credit_score) #maybe
-plot(x = data.pre.cont$count_total_tradelines_opened_24_months, y = data.pre.cont$credit_score) #maybe
-plot(x = data.pre.cont$count_tradelines_condition_derogatory, y = data.pre.cont$credit_score) #yes
-plot(x = data.pre.cont$count_open_installment_accounts_24_months, y = data.pre.cont$credit_score) #maybe
-plot(x = data.pre.cont$count_tradelines_opened_accounts, y = data.pre.cont$credit_score) #no
-plot(x = data.pre.cont$count_tradelines_open_secured_loans, y = data.pre.cont$credit_score) #maybe
-plot(x = data.pre.cont$count_tradelines_open_unsecured_loans, y = data.pre.cont$credit_score) #maybe
-plot(x = data.pre.cont$total_tradelines_amount_past_due, y = data.pre.cont$credit_score) #yes
-plot(x = data.pre.cont$total_tradelines_open_balance, y = data.pre.cont$credit_score, xlim = c(0, 1000000)) #no
-plot(x = data.pre.cont$max_cc_limit, y = data.pre.cont$credit_score, xlim = c(0, 150000)) #yes
-plot(x = data.pre.cont$total_mortgage_loans_balance, y = data.pre.cont$credit_score, xlim = c(0, 4000000)) #no
-plot(x = data.pre.cont$total_auto_loans_balance, y = data.pre.cont$credit_score) #no
-plot(x = data.pre.cont$total_student_loans_balance, y = data.pre.cont$credit_score) #yes
-plot(x = data.pre.cont$count_bankruptcy, y = data.pre.cont$credit_score) #yes
-plot(x = data.pre.cont$age, y = data.pre.cont$credit_score) #no
+plot(x = data.pre$tradelines_avg_days_since_opened, y = data.pre$credit_score) #no 
+plot(x = data.pre$count_tradelines_closed_accounts, y = data.pre$credit_score) #maybe
+plot(x = data.pre$count_total_tradelines_opened_24_months, y = data.pre$credit_score) #maybe
+plot(x = data.pre$count_tradelines_condition_derogatory, y = data.pre$credit_score) #yes
+plot(x = data.pre$count_open_installment_accounts_24_months, y = data.pre$credit_score) #maybe
+plot(x = data.pre$count_tradelines_opened_accounts, y = data.pre$credit_score) #no
+plot(x = data.pre$count_tradelines_open_secured_loans, y = data.pre$credit_score) #maybe
+plot(x = data.pre$count_tradelines_open_unsecured_loans, y = data.pre$credit_score) #maybe
+plot(x = data.pre$total_tradelines_amount_past_due, y = data.pre$credit_score) #yes
+plot(x = data.pre$total_tradelines_open_balance, y = data.pre$credit_score, xlim = c(0, 1000000)) #no
+plot(x = data.pre$max_cc_limit, y = data.pre$credit_score, xlim = c(0, 150000)) #yes
+plot(x = data.pre$total_mortgage_loans_balance, y = data.pre$credit_score, xlim = c(0, 4000000)) #no
+plot(x = data.pre$total_auto_loans_balance, y = data.pre$credit_score) #no
+plot(x = data.pre.cont$total_student_loans_balance, y = data.pre$credit_score) #yes
+plot(x = data.pre.cont$count_bankruptcy, y = data.pre$credit_score) #yes
+plot(x = data.pre.cont$age, y = data.pre$credit_score) #no
 
 ############################Clustering 
 
