@@ -5,3 +5,36 @@ abstract: "Determining the appropriate consumer to give loans to is a difficult 
 keywords: "pandoc, r markdown, knitr"
 output: pdf_document
 ---
+
+# 1 Introduction
+
+# 2 Data set
+
+## 2.1 Exploratory Data Analysis
+
+## 2.2 Preprocessing 
+
+### 2.2.1 PCA
+
+### 2.2.2 Regression
+
+### 2.2.3 $k$-Means
+
+# 3 Methods
+
+## 3.1 PCA
+
+## 3.2 Regression
+
+## 3.3 $k$-Means
+
+# 4 Applications
+
+## 4.1 Applications for PCA
+
+## 4.2 Applications for Regression
+
+## 4.3 Applications for $k$-means Clustering
+
+# 5 Discussion
+
