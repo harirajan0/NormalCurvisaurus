@@ -26,7 +26,7 @@ HARI, PAUL, CALVIN ADD IN EDA. (We should mention that some variables are very c
 
 We did different forms of preprocessing for each of the different methods (from working separately on different parts). 
 
-```{r}
+```{r, echo=FALSE}
 #Reading in the data and preprocessing it
 user_data = read.csv('user_profile.csv')
 summary(user_data)
@@ -43,9 +43,6 @@ cols <- sapply(data.pre, is.logical)
 data.pre[,cols] <- lapply(data.pre[,cols], as.numeric)
 
 #turning the buckets into continous values - we average the bucket's min & max to the middle value
-
-cor(data.pre[-1])
-
 decode_bucket <- function(fctr) {
   fctr <- gsub("[()]", '', fctr)
   fctr <- gsub("\\]", '', fctr)
