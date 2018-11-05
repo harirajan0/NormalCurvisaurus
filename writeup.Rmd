@@ -20,11 +20,17 @@ output: pdf_document
 
 ### 2.2.3 $k$-Means
 
+### 2.2.4 Lasso
+
 # 3 Methods
 
 ## 3.1 PCA
 
 ## 3.2 Regression
+
+### 3.2.1 Linear Regression
+
+### 3.2.2 Lasso
 
 ## 3.3 $k$-Means
 
