@@ -23,6 +23,9 @@ cols <- sapply(data.pre, is.logical)
 data.pre[,cols] <- lapply(data.pre[,cols], as.numeric)
 
 #turning the buckets into continous values - we average the bucket's min & max to the middle value
+
+cor(data.pre[-1])
+
 decode_bucket <- function(fctr) {
   fctr <- gsub("[()]", '', fctr)
   fctr <- gsub("\\]", '', fctr)
@@ -85,6 +88,8 @@ summary(user_engage_data)
 #We are taking the click counts for differnt types of pages
 user_engage_actions = user_engage_data[c(21, 22, 23, 24, 25, 26)]
 
+summary(user_engage_actions)
+
 #calculating the within some of squares for various clustering amounts - we're using this to determine a good number of clusters
 k.max <- 20
 data <- user_engage_actions
@@ -100,13 +105,17 @@ plot(1:k.max, wss,
 
 
 #clustering the user_engage_actions
-kmeanclusters = kmeans(user_engage_actions, 5, nstart=20)
+
+set.seed(10)
+kmeanclusters = kmeans(user_engage_actions, 8, nstart=20)
 
 kmeanclusters
 
+sum(kmeanclusters$cluster == 4)
+
 #from the clustering, we can see that there are two clusters with larger values in particular columns (see report for interpretation). We want the user IDs of the people who had the inflated column values. 
-click_credit_card = user_engage_data[which(kmeanclusters$cluster == 6),]
-click_personal_loan = user_engage_data[which(kmeanclusters$cluster == 7),]
+click_credit_card = user_engage_data[which(kmeanclusters$cluster == 7),]
+click_personal_loan = user_engage_data[which(kmeanclusters$cluster == 4),]
 
 #creating a subset of user demographics that relate to the people with inflated column values
 click_credit_users = subset(data.pre, data.pre$user_id %in% click_credit_card$user_id)
@@ -128,8 +137,6 @@ train = sample(1:nrow(data.pre.lasso), nrow(data.pre.lasso))
 
 y = data.pre.lasso[[31]]
                    
-
-
 x.matrix = data.matrix(data.pre.lasso[-c(31)],rownames.force = NA)
 
 test = (-train)
@@ -148,13 +155,14 @@ plot(fit_lasso)
 
 plot(cv_fit_lasso, xvar="lambda")
 
-opt_lambda = cv_fit_lasso$lambda.min
+#opt_lambda = cv_fit_lasso$lambda.min
+#opt_lambda
 
 fit = cv_fit_lasso$glmnet.fit
 
 fit
 
-coef(fit, s=5)
+coef(fit, s=2)
 
 
 ```
