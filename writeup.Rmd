@@ -212,5 +212,7 @@ compare
 ```
 The above table is a subset of all of the features that differ between the two groups (check appendix for the full list of features). We can see that in several categories there is quite a large difference between the mean variables of the two clustered groups, and they are make sense. The users who click on the credit pages more often have a lower credit score (they click on the credit pages because they are interested in improving their credit), have inflated values that are associated with good credit (click_credit has lower cc_open_balance, max_cc_limit,count_tradelines_condition_derogatory). The click_loan group tend to have higher loan amounts, and they click on the loan pages more often possibly to learn how to best pay back their loans, or perhaps they clicked on the pages to take a loan. 
 
+From the k-means clusters, we were able to determine that the demographics of people who use Credit Sesame's website differently and access different pages are in fact different. Naturally, the people who click more on credit or loans are the people who need help in improving those areas. By using k-means clustering, we were able to look at different people as a group, which meant we didn't have to compare individuals to other individuals, and it gives us a better view of what different groups of people are using Credit Sesame.
+
 # 5 Discussion
 
