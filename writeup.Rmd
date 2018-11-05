@@ -7,6 +7,13 @@ output: pdf_document
 abstract: ""
 ---
 
+```{r, include=FALSE}
+#Load necessary packages
+library("magrittr")
+library("tidyr")
+library("ggplot2")
+```
+
 # 1 Introduction
 
 Determining the appropriate consumer to give loans to is a difficult task that can depend on many factors. Some of which directly impact what a company may think of you such as the amount past due on accounts, your open balance, etc. Other factors are more implicit, but could also determine whether or not you'd be a good candidate to give a loan to. We analyzed data from Credit Sesame, a company that calculate credit scores to determine options for credit cards, mortgage rates and loans. This dataset included three main parts: User Demographics, First Session Information and 30-day User Engagement Data. The user demographics data included mostly credit profile information including loan histories, tradeline details, etc. There were also a few personal features such as gender and location. The First Session data provided action logs of each user's first interaction with the Credit Sesame website. Finally, the 30-day user engagement gave insight into the actions of users in each one's first 30 days. This dataset had similar features to the first session, but was sparser and included various logins for each user. 
@@ -19,16 +26,13 @@ ADD IN SUMMARY OF RESULTS
 
 # 2 Data set
 
-## 2.1 Exploratory Data Analysis
-HARI, PAUL, CALVIN ADD IN EDA. (We should mention that some variables are very correlated - the correlation matrix is easy to make)
-
-## 2.2 Preprocessing 
+## 2.1 Preprocessing 
 
 We did different forms of preprocessing for each of the different methods (from working separately on different parts). 
 
 ```{r}
-#Reading in the data and preprocessing it
-user_data = read.csv('user_profile.csv')
+#Reading in the data
+user_data = read.csv('data/user_profile.csv')
 summary(user_data)
 
 #Removing columns that are redundant and cover the same information
@@ -44,7 +48,7 @@ data.pre[,cols] <- lapply(data.pre[,cols], as.numeric)
 
 #turning the buckets into continous values - we average the bucket's min & max to the middle value
 
-cor(data.pre[-1])
+#cor(data.pre[-1])
 
 decode_bucket <- function(fctr) {
   fctr <- gsub("[()]", '', fctr)
@@ -64,16 +68,16 @@ data.pre = data.pre[-c(31,32)]
 data.pre.pca = data.pre[-c(1, 5, 6, 9, 12, 13, 14, 19, 20, 23, 27, 29)]
 ```
 
-* 2.2.1 PCA: To clean the user profile data and make it more manageable, we removed any rows with any NA's and removed users with gender marked as "unisex". We removed the unisex because there was an extremely large number of unisex users, which led us to believe that unisex also represented the users who didn't want to choose which sex they were. This cut down on our sample sizebut we still had quite a lot of data. We also removed the user_signup_timesteamp, state and zipcode features since we decided they were unnecessary to the PCA. For other features, there seemed to be overlapping information that were redundant and colinear- Cases like avg_days vs. max_days were not both necessary since avg_days accounts for max_days, so we removed rows that represented the same information. Also, cases where information could be represented by total tradeline data, but also had information split between banking, credit, etc. also presented the same information. While these could individually important, we only wanted general credit information for the PCA, so we removed any columns that represented a split of tradeline information (if tradeline info was unavailable, we kept the subset features of tradeline). Finally, in dealing with bucketed age and credit scores, we parsed the min and ma of the buckets and had numerical values as the average of the min & max of the bucket. This means that we don't have to deal with numberous dummy variables. 
+* 2.1.1 PCA: To clean the user profile data and make it more manageable, we removed any rows with any NA's and removed users with gender marked as "unisex". We removed the unisex because there was an extremely large number of unisex users, which led us to believe that unisex also represented the users who didn't want to choose which sex they were. This cut down on our sample sizebut we still had quite a lot of data. We also removed the user_signup_timesteamp, state and zipcode features since we decided they were unnecessary to the PCA. For other features, there seemed to be overlapping information that were redundant and colinear- Cases like avg_days vs. max_days were not both necessary since avg_days accounts for max_days, so we removed rows that represented the same information. Also, cases where information could be represented by total tradeline data, but also had information split between banking, credit, etc. also presented the same information. While these could individually important, we only wanted general credit information for the PCA, so we removed any columns that represented a split of tradeline information (if tradeline info was unavailable, we kept the subset features of tradeline). Finally, in dealing with bucketed age and credit scores, we parsed the min and ma of the buckets and had numerical values as the average of the min & max of the bucket. This means that we don't have to deal with numberous dummy variables. 
 
 
-* 2.2.2 Regression
+* 2.1.2 Regression
 
-* 2.2.4 Lasso: We took a similar process of preprocessing lasso - we removed the NAs and unisex users, and removed unnecessary features (user_signup_timestamp, state and zipcode). We also parsed the bucketed features like in PCA. However, we decided not to remove redundent, colinear values because lasso naturally does this during the regression. 
+* 2.1.3 Lasso: We took a similar process of preprocessing lasso - we removed the NAs and unisex users, and removed unnecessary features (user_signup_timestamp, state and zipcode). We also parsed the bucketed features like in PCA. However, we decided not to remove redundent, colinear values because lasso naturally does this during the regression. 
 
 ```{r}
 #reading in data
-user_engage_data = read.csv('user_engagement.csv')
+user_engage_data = read.csv('data/user_engagement.csv')
 
 summary(user_engage_data)
 
@@ -81,18 +85,35 @@ summary(user_engage_data)
 user_engage_actions = user_engage_data[c(21, 22, 23, 24, 25, 26)]
 ```
 
-* 2.2.3 $k$-Means: The k-means clustering was meant as a way to cluster users based on their engagement. We decided that the best way to gauge engagement is based on the number of clicks per page. So, we took the 30 day engagement dataset and only took the features that represented clicks per various pages like credit cards, loans, etc. Although the dataset was very sparse, we didn't need to preprocess it any further. 
+* 2.1.4 $k$-Means: The k-means clustering was meant as a way to cluster users based on their engagement. We decided that the best way to gauge engagement is based on the number of clicks per page. So, we took the 30 day engagement dataset and only took the features that represented clicks per various pages like credit cards, loans, etc. Although the dataset was very sparse, we didn't need to preprocess it any further. 
 
+## 2.2 Exploratory Data Analysis
+HARI, PAUL, CALVIN ADD IN EDA. (We should mention that some variables are very correlated - the correlation matrix is easy to make)
+
+We started our exploratory data analysis by first looking at the distribution of each of the variables in the dataset, as shown below.
+
+```{r}
+#Plot histogram of each column in user_data
+data.pre %>% gather() %>% head()
+ggplot(gather(data.pre[seq(2,15)]), aes(value)) + 
+    geom_histogram(bins=10) + 
+    facet_wrap(~key, scales = 'free_x')
+ggplot(gather(data.pre[seq(16,31)]), aes(value)) + 
+    geom_histogram(bins=10) + 
+    facet_wrap(~key, scales = 'free_x')
+```
+
+As shown by the histograms of the column variables above, we noticed that almost all the non-categorical data was heavily skewed to the right as many of the variables had a high frequency for lower values and significantly lower frequency for higher values. The only non-cateogrical variables that were not heavily skewed were `age` and `credit_score`. This was important to keep in mind as we proceeded in our analysis as the distribution of each variable can impact the results of our analysis methods.
 
 # 3 Methods
 
 * 3.1 PCA: We used Principle Component Analysis because it is a powerful tool that can be used for both exploratory data analysis and also making conclusions about the dataset. PCA continually takes the axis of greatest variance and calculates the correlation coefficients along this axis as loadings. We wanted some method to visualize the relationship between data points, but the dataset's dimensionality was too large to plot. Using PCA, we could plot two or three of the Principle Components in order to have some sort of visualization of the data, and can offer some intuition of the relationships between data. In plotting it, we were hoping to see two or more distinct clusters of datapoints, but we were left with a large clump. However, the biplot and loadings revealed interesting information that led to other discoveries. Interpreting the PCA is difficult, but by analyzing the loadings, we can see how correlated various features are within each principle component, which tells us which features are related to each other. 
 
-* 3.2.1 Linear Regression
+* 3.2.2 Linear Regression
 
-* 3.2.2 Lasso: Regular linear regression cannot work properly when features are highly correlated. However, Lasso is a form of linear regression that allows us to input a dataset with correlated variables. Lasso will account for these variables and remove them based on the lambda regularization. We used this method because our process of removing features by hand using the R-squared was slow and had a lot of room of error. We also had to do a lot of preprocessing for linear regression that could have removed potentially important features. Using lasso, we were free to input the entire dataset without worrying about correlated variables. Overally, we implemented lasso as an alternative to linear regression that would work better with the dataset due to the correlated variables. 
+* 3.2.3 Lasso: Regular linear regression cannot work properly when features are highly correlated. However, Lasso is a form of linear regression that allows us to input a dataset with correlated variables. Lasso will account for these variables and remove them based on the lambda regularization. We used this method because our process of removing features by hand using the R-squared was slow and had a lot of room of error. We also had to do a lot of preprocessing for linear regression that could have removed potentially important features. Using lasso, we were free to input the entire dataset without worrying about correlated variables. Overally, we implemented lasso as an alternative to linear regression that would work better with the dataset due to the correlated variables. 
 
-* 3.3 $k$-Means: K-means clustering allows us to find groups of datapoints together based on their distances from each other. By dictating a number of clusters we expect to see, the algorithm will find the closest subset of datapoints for each of clusters. This model is useful because it gives us a definitive way to find which datapoints are related based on a variety of features. For our dataset, we can take datapoints for different clusters and view them as a collective, and find the demographics of the clusters based on its datapoints. 
+* 3.2.4 $k$-Means: K-means clustering allows us to find groups of datapoints together based on their distances from each other. By dictating a number of clusters we expect to see, the algorithm will find the closest subset of datapoints for each of clusters. This model is useful because it gives us a definitive way to find which datapoints are related based on a variety of features. For our dataset, we can take datapoints for different clusters and view them as a collective, and find the demographics of the clusters based on its datapoints. 
 
 # 4 Applications
 
