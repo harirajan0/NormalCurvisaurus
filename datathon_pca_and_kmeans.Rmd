@@ -40,11 +40,12 @@ data.pre = data.pre[-c(31,32)]
 summary(data.pre)
 
 #continue removing features that are unnecessary - see report for reasoning
-data.pre.cont = data.pre[-c(1, 5, 6, 9, 12, 13, 14, 19, 20, 23, 27, 29)]
+data.pre.pca = data.pre[-c(1, 5, 6, 9, 12, 13, 14, 19, 20, 23, 27, 29)]
 
 #doing PCA over the preprocessed dataset
-data.pca = prcomp(data.pre.cont, scale=TRUE)
+data.pca = prcomp(data.pre.pca, scale=TRUE)
 loadings = data.pca$rotation
+loadings
 head(loadings)
 
 #plotting PC1 vs. PC2
@@ -114,5 +115,46 @@ click_loan_users = subset(data.pre, data.pre$user_id %in% click_personal_loan$us
 #comparing the user demographics of the two groups of people
 summary(click_credit_users)
 summary(click_loan_users)
+
+###################################Lasso Regression
+
+summary(data.pre)
+
+data.pre.lasso = data.pre[,-c(1)]
+
+set.seed(1)
+
+train = sample(1:nrow(data.pre.lasso), nrow(data.pre.lasso))
+
+y = data.pre.lasso[[31]]
+                   
+
+
+x.matrix = data.matrix(data.pre.lasso[-c(31)],rownames.force = NA)
+
+test = (-train)
+
+y.test = y[test]
+
+x.matrix[train,]
+
+library(glmnet)
+
+cv_fit_lasso = cv.glmnet(x.matrix[train,], y[train], alpha=1)
+
+fit_lasso = glmnet(x.matrix[train,], y[train], alpha=1)
+
+plot(fit_lasso)
+
+plot(cv_fit_lasso, xvar="lambda")
+
+opt_lambda = cv_fit_lasso$lambda.min
+
+fit = cv_fit_lasso$glmnet.fit
+
+fit
+
+coef(fit, s=5)
+
 
 ```
