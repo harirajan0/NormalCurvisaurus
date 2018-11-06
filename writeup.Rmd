@@ -247,7 +247,7 @@ finalreg <- lm(credit_cat~ home_cat + count_tradelines_open_collection_accounts 
 summary(finalreg)
 
 # plot the residuals
-plot(predict(finaltreg),residuals(finalreg), main= "Regression Residuals")
+plot(predict(finalreg),residuals(finalreg), main= "Regression Residuals")
 ```
 
 * 4.3 Applications for $k$-means Clustering: From our preprocessed data of clicks on different parts of the website, we start to run the k-means clustering algorithm. First, we need to decide on the number of clusters that we want. To do so, we run k-means for 1 to 20 clusters, calculating the within-sum-of-squares error for each. The within-sum-of-squares error tells us how separated our data is from the mean of the cluster. To have the best closest clusters, we want to minimize this value. 
