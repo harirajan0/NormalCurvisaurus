@@ -340,3 +340,4 @@ The above table is a subset of all of the features that differ between the two g
 From the k-means clusters, we were able to determine that the demographics of people who use Credit Sesame's website differently and access different pages are in fact different. Naturally, the people who click more on credit or loans are the people who need help in improving those areas. By using k-means clustering, we were able to look at different people as a group, which meant we didn't have to compare individuals to other individuals, and it gives us a better view of what different groups of people are using Credit Sesame.
 
 # 5 Discussion
+
