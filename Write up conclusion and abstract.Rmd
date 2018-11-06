@@ -1,0 +1,25 @@
+---
+title: "Group Write Up"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+#UPDATED applications paragraph
+#* 4.2 Applications for Regression: From applications, we can see how our group removed the features that eventually led to our current model. Initially when we fit all of the variables, each one was determined to be significant (p value < 0.05). However, we did not want to have so many variables in our models, especially after seeing collinearity in our plots. This is why we decided to remove variables based on R-squared. Our current regression model indicates that being a homeowner, your number of open collection accounts, your maximum credit card limit, and the average days since your account has been open, are the most significant indicators of credit score and future delinquent payments. We expected open collections to have a strong predictive relationship with delinquencies and credit score since open collections are caused by missed payments. Our results indicate that each account turned over to a third party for collections leads to a 5-point decrease in credit score. Homeowners tend to have a credit score that is 20 points above non-homeowners. This makes sense because homeowners tend to be more financially stable.  Every dollar increase on a credit card limit tends to indicate a 0.0045-point increase in credit score. This is probably explained by the fact that people with better credit scores who are more financially stable are given larger credit card limits. We also found that with every day an individual has an account open, his credit score increases by 0.007135 points. This last finding is also logical because accounts that stay open are accounts that have gone longer making payments. Unfortunately, we only reached around 0.35 R-squared, which could be improved. The further limits of this regression lie in the skewed overall distribution of this data, which resulted in residual plots for the model that indicate that we must be wary using this model.
+
+
+#EDA paragraph:
+#We plotted the variables we were considering for our regression against one another to see if there was any collinearity between variables. From the plots we saw one concerningly strong correlations between open collection accounts and tradelines condition derogatory with an R value of 0.82. We ultimately eliminated tradelines condition derogatory from out model. The next strongest R value between our variables was -0.21 for tradelines derogatory and max cc limit both of which we ultimately ended up keeping within the model.
+
+#Discussion:
+#Our PCA and Linear Regression Analysis both support the conclusion that longer opened accounts and higher credit card limits are two of the strongest indicators of credit scores. They also support homeowner status and number of accounts turned over to collection agencies as strong predictors of credit score. Our linear regression interpretation in the applications section defines our estimate for the strength of these indicators based off of how they are measured. However, the concerning linear cluster in out residual plot lead us to take the coefficients lightly. While we are confident that these factors are strongly linked to an individual’s credit score, using them to estimate an individual’s exact credit score could be problematic. We believe that it would be best to use our results to estimate more general credit score buckets for targeted advertisements since the precise effect of our variables is questionable.
+
+#Our k-means clustering concluded that Credit Sesame’s website clientele that uses the credit card links are different than the people who used the website for loans. Credit Sesame can use this information to more specifically target advertise credit cards to one group and loans to another. The clustering also concluded that people who look at their credit tend to have worse credit scores, and more specifically have more unpaid balances that negatively impacted their credit. Naturally the clustering also indicated that people who use the loan feature tend to have higher amounts of loans. All of this information can help credit sesame advertise to specific groups of customers in different areas of their website. 
+
+#Abstract:
+#The credit score of an individual is heavily linked to their homeowner status, length of opened accounts, credit card limits, and number of accounts turned over to collection agencies. While Credit Sesame can use any/all of these factors to estimate individual’s credit score, the results of our regression are not extremely convincing. The strength of our regression leads us to believe the results would be best used to refine an individual’s calculated credit score or group individuals in larger credit score buckets for targeted advertising. Credit Sesame should also consider more targeted advertising on certain parts of their website after we’ve seen different customer traits based on what they use the website for. 
+
+```
+
+
