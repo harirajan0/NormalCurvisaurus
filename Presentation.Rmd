@@ -1,0 +1,87 @@
+---
+title: "Datathon Slide Template"
+author: "Rebecca C. Steorts"
+date: September 27 2018
+output: 
+     beamer_presentation:
+      includes: 
+          in_header: custom2.tex
+          
+
+font-size: 12px
+---
+```{r, echo=FALSE}
+#Load necessary packages
+library("magrittr")
+library("tidyr")
+library("ggplot2")
+```
+
+Data set
+===
+
+- The data was from Credit Sesame, a company that calculates credit scores to determine options for credit cards, mortgage rates and loans. This dataset included: 
+      -User Demographics - credit profile information including loan histories, tradeline details, etc, and a few personal features such as gender and location
+      -First Session Information - action logs of each user's first interaction with the Credit Sesame website
+      -30-day User Engagement Data - insight into the actions of users in each one's first 30 days which included various logins for each user
+===
+Dislay of Data Through Initial Exploration
+```{r}
+#Plot histogram of each column in user_data
+data.pre %>% gather() %>% head()
+ggplot(gather(data.pre[seq(2,15)]), aes(value)) + 
+    geom_histogram(bins=10) + 
+    facet_wrap(~key, scales = 'free_x')
+ggplot(gather(data.pre[seq(16,31)]), aes(value)) + 
+    geom_histogram(bins=10) + 
+    facet_wrap(~key, scales = 'free_x')
+``` 
+
+Exploring the Dataset 
+===
+- Started EDA by looking at the distribution of each of the variables in the dataset, as shown in the previous slide.
+- Almost all the non-categorical data was heavily skewed to the right.
+- Many variables had high frequency for lower values and significantly lower frequency for higher values
+- Only non-cateogrical variables not heavily skewed were `age` and `credit_score`. 
+
+This was important to keep in mind as we proceeded in our analysis as the distribution of each variable can impact the results of our analysis methods.
+
+
+Challenges of the Dataset
+===
+
+- The skewed distribution of our variables was the biggest challenge for determining how to analyze this data.
+- Ultimately we did not let the skew effect our methods but were careful to consider it in our analysis.
+
+Methods
+===
+
+- We used several methods: PCA, Regression Analysis, and k-means clusterng
+- Our most successful method was the k-means clustering
+- To evalute this method, we grouped and checked coefficients (CALVIN OR HARI)
+
+
+Methods (Continued)
+===
+
+- How did you analyze the data set
+- Stick to your best method that worked
+- How did you evaluate how your method worked 
+
+Results
+===
+
+- Demographics of people who use Credit Sesame's website differently and access different pages are in fact different. The people who click more on credit or loans are the people who need help in improving those areas. By using k-means clustering, we were able to look at different people as a group, which meant we didn't have to compare individuals to other individuals, and it gives us a better view of what different groups of people are using Credit Sesame.
+- Again, be sure to use visuals here. 
+
+Results (continued)
+===
+
+- Highlight your results from the methods that you used 
+- Again, be sure to use visuals here. 
+
+Conclusions
+===
+
+Here, you should provide some conclusions regarding 
+the datathon, data analysis, etc. 
