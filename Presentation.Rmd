@@ -5,7 +5,7 @@ date: September 27 2018
 output: 
      beamer_presentation:
       includes: 
-          in_header: custom2.tex
+          in_header: slide-template/custom2.tex
           
 
 font-size: 12px
@@ -17,6 +17,40 @@ library("tidyr")
 library("ggplot2")
 ```
 
+```{r, echo=FALSE}
+#Reading in the data
+user_data = read.csv('data/user_profile.csv')
+summary(user_data)
+
+#Removing columns that are redundant and cover the same information
+data.pre = user_data[-c(1, 3, 4, 5, 27, 28, 36)]
+
+#ishomeowner, gender(remove unisex), remove NA from 8, 9, 10, 27, 28
+data.pre = subset(data.pre, (data.pre$gender == 'Male' | data.pre$gender == 'Female'))
+data.pre= na.omit(data.pre)
+data.pre$gender = data.pre$gender == 'Female'
+data.pre$is_homeowner = data.pre$is_homeowner == 'True'
+cols <- sapply(data.pre, is.logical)
+data.pre[,cols] <- lapply(data.pre[,cols], as.numeric)
+
+#turning the buckets into continous values - we average the bucket's min & max to the middle value
+
+#cor(data.pre[-1])
+
+decode_bucket <- function(fctr) {
+  fctr <- gsub("[()]", '', fctr)
+  fctr <- gsub("\\]", '', fctr)
+  bounds <- strsplit(fctr, ", ")
+  return(mean(as.numeric(bounds[[1]])))
+}
+data.pre$age = unlist(lapply(data.pre$age_bucket, FUN = decode_bucket))
+data.pre$credit_score = unlist(lapply(data.pre$credit_score_bucket, FUN = decode_bucket))
+data.pre = na.omit(data.pre)
+
+#removing bucketed columns
+data.pre = data.pre[-c(31,32)]
+```
+
 Data set
 ===
 
@@ -24,8 +58,9 @@ Data set
       -User Demographics - credit profile information including loan histories, tradeline details, etc, and a few personal features such as gender and location
       -First Session Information - action logs of each user's first interaction with the Credit Sesame website
       -30-day User Engagement Data - insight into the actions of users in each one's first 30 days which included various logins for each user
-===
+
 Dislay of Data Through Initial Exploration
+===
 ```{r}
 #Plot histogram of each column in user_data
 data.pre %>% gather() %>% head()
@@ -58,30 +93,23 @@ Methods
 
 - We used several methods: PCA, Regression Analysis, and k-means clusterng
 - Our most successful method was the k-means clustering
-- To evalute this method, we grouped and checked coefficients (CALVIN OR HARI)
-
-
-Methods (Continued)
-===
-
-- How did you analyze the data set
-- Stick to your best method that worked
-- How did you evaluate how your method worked 
+- To evalute this method, we compared how the data differed between the clusters
 
 Results
 ===
 
-- Demographics of people who use Credit Sesame's website differently and access different pages are in fact different. The people who click more on credit or loans are the people who need help in improving those areas. By using k-means clustering, we were able to look at different people as a group, which meant we didn't have to compare individuals to other individuals, and it gives us a better view of what different groups of people are using Credit Sesame.
-- Again, be sure to use visuals here. 
+- We noticed that in particular, there were two clusters which had relatively high values for `click_count_credit_card` and `click_count_personal_loan`, respectively
+- ADD VISUAL HERE SHOWING THE CLUSTERS
 
 Results (continued)
 ===
 
-- Highlight your results from the methods that you used 
-- Again, be sure to use visuals here. 
+- The users that were grouped into these two clusters had a noticeably large difference in the mean values for several different variables as shown below. Note that these variable values generally correspond to the user's frewuent actions on the Credit Sesame website.
+- ADD VISUAL HERE SHOWING THE DIFFERENCE IN THE MEANS
 
 Conclusions
 ===
 
-Here, you should provide some conclusions regarding 
-the datathon, data analysis, etc. 
+- Our PCA and Linear Regression Analysis both support the conclusion that longer opened accounts and higher credit card limits are two of the strongest indicators of credit scores. Additionally, homeowner status and number of accounts turned over to collection agencies as strong predictors of credit score.
+- Our k-means clustering concluded that Credit Sesame's website clientele that use the credit card links are different from the people who used the website for loans.
+- Future Work: Moving fowards, we can work to improve the current models that we used. For example, our regression model could've been improved using other regression methods such as Lasso or ElasticNet so we wouldn't have to do feature selection by hand. Additionally, we could've tried clustering by usuing hierarchical clustering to see if we could get more informative results. 

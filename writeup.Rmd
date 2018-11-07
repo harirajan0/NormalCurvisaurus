@@ -268,7 +268,7 @@ click_loan_users = subset(data.pre, data.pre$user_id %in% click_personal_loan$us
 #comparing the user demographics of the two groups of people
 options(scipen=999)
 #add this to the appendix
-'''compare = matrix(c(mean(click_credit_users$is_homeowner), mean(click_loan_users$is_homeowner),
+compare = matrix(c(mean(click_credit_users$is_homeowner), mean(click_loan_users$is_homeowner),
                    mean(click_credit_users$gender), mean(click_loan_users$gender),
                    mean(click_credit_users$tradelines_avg_days_since_opened), mean(click_loan_users$tradelines_avg_days_since_opened),
                    mean(click_credit_users$tradelines_max_days_since_opened), mean(click_loan_users$tradelines_max_days_since_opened),
@@ -298,7 +298,7 @@ options(scipen=999)
                    mean(click_credit_users$count_inquiries_12_months), mean(click_loan_users$count_inquiries_12_months),
                    mean(click_credit_users$count_bankruptcy), mean(click_loan_users$count_bankruptcy),
                    mean(click_credit_users$age), mean(click_loan_users$age),
-                   mean(click_credit_users$credit_score), mean(click_loan_users$credit_score)),ncol = 2, byrow = TRUE)'''
+                   mean(click_credit_users$credit_score), mean(click_loan_users$credit_score)),ncol = 2, byrow = TRUE)
 
 
 compare = matrix(c(
