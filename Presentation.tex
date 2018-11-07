@@ -1,0 +1,629 @@
+\documentclass[ignorenonframetext,]{beamer}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\newif\ifbibliography
+\hypersetup{
+            pdftitle={Datathon Slide Template},
+            pdfauthor={Rebecca C. Steorts},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight0.8\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+
+% Prevent slide breaks in the middle of a paragraph:
+\widowpenalties 1 10000
+\raggedbottom
+
+\AtBeginPart{
+  \let\insertpartnumber\relax
+  \let\partname\relax
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \let\insertsectionnumber\relax
+    \let\sectionname\relax
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \let\insertsubsectionnumber\relax
+  \let\subsectionname\relax
+  \frame{\subsectionpage}
+}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Custom definitions
+% To use this customization file, insert the line "\input{custom}" in the header of the tex file.
+
+% Formatting
+
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[page number]
+\usepackage{bbm}
+% Packages
+\usepackage{amssymb,amsfonts,amsmath,latexsym,amsthm}
+%\usepackage[usenames,dvipsnames]{color}
+%\usepackage[]{graphicx}
+%\usepackage[space]{grffile}
+\usepackage{mathrsfs} 
+ \usepackage{amssymb,latexsym}
+\usepackage{amssymb,amsfonts,amsmath,latexsym,amsthm, bm}
+%\usepackage[usenames,dvipsnames]{color}
+%\usepackage[]{graphicx}
+%\usepackage[space]{grffile}
+\usepackage{mathrsfs}   % fancy math font
+% \usepackage[font=small,skip=0pt]{caption}
+%\usepackage[skip=0pt]{caption}
+%\usepackage{subcaption}
+%\usepackage{verbatim}
+%\usepackage{url}
+%\usepackage{bm}
+\usepackage{dsfont}
+\usepackage{multirow}
+%\usepackage{extarrows}
+%\usepackage{multirow}
+%% \usepackage{wrapfig}
+%% \usepackage{epstopdf}
+%\usepackage{rotating}
+%\usepackage{tikz}
+%\usetikzlibrary{fit}					% fitting shapes to coordinates
+%\usetikzlibrary{backgrounds}	% drawing the background after the foreground
+
+
+% \usepackage[dvipdfm,colorlinks,citecolor=blue,linkcolor=blue,urlcolor=blue]{hyperref}
+%\usepackage[citecolor=blue,linkcolor=blue,urlcolor=blue]{hyperref}
+%%\usepackage{hyperref}
+%\usepackage[authoryear,round]{natbib}
+
+
+%  Theorems, etc.
+
+%\theoremstyle{plain}
+%\newtheorem{theorem}{Theorem}[section]
+%\newtheorem{corollary}[theorem]{Corollary}
+%\newtheorem{lemma}[theorem]{Lemma}
+%\newtheorem{proposition}[theorem]{Proposition}
+%\newtheorem{condition}[theorem]{Condition}
+% \newtheorem{conditions}[theorem]{Conditions}
+
+%\theoremstyle{definition}
+%\newtheorem{definition}[theorem]{Definition}
+%% \newtheorem*{unnumbered-definition}{Definition}
+%\newtheorem{example}[theorem]{Example}
+%\theoremstyle{remark}
+%\newtheorem*{remark}{Remark}
+%\numberwithin{equation}{section}
+
+
+
+
+
+
+% Document-specific shortcuts
+\newcommand{\btheta}{{\bm\theta}}
+\newcommand{\bbtheta}{{\pmb{\bm\theta}}}
+
+\newcommand{\commentary}[1]{\ifx\showcommentary\undefined\else \emph{#1}\fi}
+
+\newcommand{\term}[1]{\textit{\textbf{#1}}}
+
+% Math shortcuts
+
+% Probability distributions
+\DeclareMathOperator*{\Exp}{Exp}
+\DeclareMathOperator*{\TExp}{TExp}
+\DeclareMathOperator*{\Bernoulli}{Bernoulli}
+\DeclareMathOperator*{\Beta}{Beta}
+\DeclareMathOperator*{\Ga}{Gamma}
+\DeclareMathOperator*{\TGamma}{TGamma}
+\DeclareMathOperator*{\Poisson}{Poisson}
+\DeclareMathOperator*{\Binomial}{Binomial}
+\DeclareMathOperator*{\NormalGamma}{NormalGamma}
+\DeclareMathOperator*{\InvGamma}{InvGamma}
+\DeclareMathOperator*{\Cauchy}{Cauchy}
+\DeclareMathOperator*{\Uniform}{Uniform}
+\DeclareMathOperator*{\Gumbel}{Gumbel}
+\DeclareMathOperator*{\Pareto}{Pareto}
+\DeclareMathOperator*{\Mono}{Mono}
+\DeclareMathOperator*{\Geometric}{Geometric}
+\DeclareMathOperator*{\Wishart}{Wishart}
+
+% Math operators
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\Cov}{Cov}
+\DeclareMathOperator*{\diag}{diag}
+\DeclareMathOperator*{\median}{median}
+\DeclareMathOperator*{\Vol}{Vol}
+
+% Math characters
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\E}{\mathbb{E}}
+\renewcommand{\Pr}{\mathbb{P}}
+\newcommand{\I}{\mathds{1}}
+\newcommand{\V}{\mathbb{V}}
+
+\newcommand{\A}{\mathcal{A}}
+%\newcommand{\C}{\mathcal{C}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\Hcal}{\mathcal{H}}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\Zcal}{\mathcal{Z}}
+\renewcommand{\P}{\mathcal{P}}
+
+\newcommand{\T}{\mathtt{T}}
+\renewcommand{\emptyset}{\varnothing}
+
+\newcommand{\bmu}{\bm{\mu}}
+\newcommand{\bX}   {\bm{X}}
+\newcommand{\sig}   {\Sigma}
+\newcommand{\bx}{\ensuremath{\mathbf{X}}}
+%\newcommand{\X}{\ensuremath{\mathbf{x}}}
+%\newcommand{\w}{\ensuremath{\mathbf{w}}}
+%\newcommand{\h}{\ensuremath{\mathbf{h}}}
+%\newcommand{\V}{\ensuremath{\mathbf{v}}}
+%\newcommand{\cov}{\text{Cov}}
+\newcommand{\var}{\text{Var}}
+
+
+% Miscellaneous commands
+\newcommand{\iid}{\stackrel{\mathrm{iid}}{\sim}}
+\newcommand{\matrixsmall}[1]{\bigl(\begin{smallmatrix}#1\end{smallmatrix} \bigr)}
+
+\newcommand{\items}[1]{\begin{itemize} #1 \end{itemize}}
+
+\newcommand{\todo}[1]{\emph{\textcolor{red}{(#1)}}}
+
+\newcommand{\branch}[4]{
+\left\{
+	\begin{array}{ll}
+		#1  & \mbox{if } #2 \\
+		#3 & \mbox{if } #4
+	\end{array}
+\right.
+}
+
+% approximately proportional to
+\def\app#1#2{%
+  \mathrel{%
+    \setbox0=\hbox{$#1\sim$}%
+    \setbox2=\hbox{%
+      \rlap{\hbox{$#1\propto$}}%
+      \lower1.3\ht0\box0%
+    }%
+    \raise0.25\ht2\box2%
+  }%
+}
+\def\approxprop{\mathpalette\app\relax}
+
+% \newcommand{\approptoinn}[2]{\mathrel{\vcenter{
+  % \offinterlineskip\halign{\hfil$##$\cr
+    % #1\propto\cr\noalign{\kern2pt}#1\sim\cr\noalign{\kern-2pt}}}}}
+
+% \newcommand{\approxpropto}{\mathpalette\approptoinn\relax}
+
+\title{Datathon Slide Template}
+\author{Rebecca C. Steorts}
+\date{September 27 2018}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+
+\begin{verbatim}
+## 
+## Attaching package: 'tidyr'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:magrittr':
+## 
+##     extract
+\end{verbatim}
+
+\begin{verbatim}
+##    Unnamed..0                                         user_id      
+##  Min.   :     0   0000485dbdc19e76bedcaf155b4de9491f414a27:     1  
+##  1st Qu.: 71373   00008fb52ca81c6767db31f58ea37e7229c372e1:     1  
+##  Median :142745   000091252c68230bd55a9abda98896c8610994bc:     1  
+##  Mean   :142745   000091d428154729cbf338d4f51aa95af254d342:     1  
+##  3rd Qu.:214118   0000b28d30dd9cf2424e83822b2877fec98b7de5:     1  
+##  Max.   :285490   0000b68d91d518befd9d44c3217fd69f4e2fa66c:     1  
+##                   (Other)                                 :285485  
+##          user_signup_timestamp     state           zipcode      
+##  2018-07-23 20:57:07:     5    TX     : 26785   30349  :   182  
+##  2018-07-01 21:11:33:     4    CA     : 24700   33311  :   175  
+##  2018-07-02 03:26:03:     4    FL     : 21955   60620  :   147  
+##  2018-07-02 19:19:32:     4    GA     : 14054   30906  :   145  
+##  2018-07-02 23:21:37:     4    NY     : 13113   60619  :   143  
+##  2018-07-03 16:17:21:     4    OH     : 11636   19124  :   141  
+##  (Other)            :285466    (Other):173248   (Other):284558  
+##  is_homeowner      gender       tradelines_avg_days_since_opened
+##  False:212817         : 34772   Min.   :    3.0                 
+##  True : 72674   Female:118914   1st Qu.:  545.5                 
+##                 Male  : 81854   Median :  919.0                 
+##                 Unisex: 49951   Mean   : 1164.7                 
+##                                 3rd Qu.: 1479.6                 
+##                                 Max.   :19777.0                 
+##                                 NA's   :10593                   
+##  tradelines_max_days_since_opened tradelines_min_days_since_opened
+##  Min.   :    3                    Min.   :    2.0                 
+##  1st Qu.:  964                    1st Qu.:   92.0                 
+##  Median : 1750                    Median :  182.0                 
+##  Mean   : 2495                    Mean   :  369.2                 
+##  3rd Qu.: 3268                    3rd Qu.:  397.0                 
+##  Max.   :25797                    Max.   :19777.0                 
+##  NA's   :10593                    NA's   :10593                   
+##  count_tradelines_closed_accounts count_total_tradelines_opened_24_months
+##  Min.   :  0.000                  Min.   :  0                            
+##  1st Qu.:  1.000                  1st Qu.:  1                            
+##  Median :  4.000                  Median :  2                            
+##  Mean   :  7.502                  Mean   :  3                            
+##  3rd Qu.: 10.000                  3rd Qu.:  4                            
+##  Max.   :187.000                  Max.   :100                            
+##                                                                          
+##  count_tradelines_cc_opened_24_months
+##  Min.   : 0.0000                     
+##  1st Qu.: 0.0000                     
+##  Median : 0.0000                     
+##  Mean   : 0.5937                     
+##  3rd Qu.: 1.0000                     
+##  Max.   :20.0000                     
+##                                      
+##  count_tradelines_condition_derogatory
+##  Min.   :  0.000                      
+##  1st Qu.:  1.000                      
+##  Median :  3.000                      
+##  Mean   :  4.299                      
+##  3rd Qu.:  6.000                      
+##  Max.   :282.000                      
+##                                       
+##  count_open_installment_accounts_24_months
+##  Min.   : 0.0000                          
+##  1st Qu.: 0.0000                          
+##  Median : 0.0000                          
+##  Mean   : 0.6473                          
+##  3rd Qu.: 1.0000                          
+##  Max.   :20.0000                          
+##                                           
+##  count_tradelines_open_collection_accounts count_tradelines_open_mortgages
+##  Min.   :  0.000                           Min.   : 0.0000                
+##  1st Qu.:  0.000                           1st Qu.: 0.0000                
+##  Median :  1.000                           Median : 0.0000                
+##  Mean   :  2.348                           Mean   : 0.1361                
+##  3rd Qu.:  3.000                           3rd Qu.: 0.0000                
+##  Max.   :281.000                           Max.   :35.0000                
+##                                                                           
+##  count_tradelines_open_student_loans count_tradelines_opened_accounts
+##  Min.   : 0.0000                     Min.   :  0.00                  
+##  1st Qu.: 0.0000                     1st Qu.:  2.00                  
+##  Median : 0.0000                     Median :  5.00                  
+##  Mean   : 0.8865                     Mean   :  6.56                  
+##  3rd Qu.: 0.0000                     3rd Qu.:  9.00                  
+##  Max.   :44.0000                     Max.   :281.00                  
+##                                                                      
+##  count_tradelines_open_secured_loans count_tradelines_open_unsecured_loans
+##  Min.   : 0.00000                    Min.   : 0.0000                      
+##  1st Qu.: 0.00000                    1st Qu.: 0.0000                      
+##  Median : 0.00000                    Median : 0.0000                      
+##  Mean   : 0.08293                    Mean   : 0.1293                      
+##  3rd Qu.: 0.00000                    3rd Qu.: 0.0000                      
+##  Max.   :26.00000                    Max.   :10.0000                      
+##                                                                           
+##  total_tradelines_amount_past_due total_open_cc_amount_past_due
+##  Min.   :     0                   Min.   :    0.000            
+##  1st Qu.:     0                   1st Qu.:    0.000            
+##  Median :     0                   Median :    0.000            
+##  Mean   :  2942                   Mean   :    3.766            
+##  3rd Qu.:  1269                   3rd Qu.:    0.000            
+##  Max.   :390690                   Max.   :16607.000            
+##                                                                
+##  total_cc_open_balance total_tradelines_open_balance  max_cc_limit   
+##  Min.   :     0        Min.   :      0               Min.   :     0  
+##  1st Qu.:     0        1st Qu.:   1677               1st Qu.:     0  
+##  Median :     0        Median :   9841               Median :     0  
+##  Mean   :  2191        Mean   :  40200               Mean   :  2395  
+##  3rd Qu.:  1108        3rd Qu.:  35256               3rd Qu.:  1958  
+##  Max.   :198182        Max.   :8221813               Max.   :200000  
+##                                                                      
+##  max_cc_utilization_ratio avg_cc_utilization_ratio
+##  Min.   :-1.00            Min.   : 0.00           
+##  1st Qu.: 0.40            1st Qu.: 0.19           
+##  Median : 0.88            Median : 0.61           
+##  Mean   : 0.71            Mean   : 0.56           
+##  3rd Qu.: 0.99            3rd Qu.: 0.92           
+##  Max.   :10.48            Max.   :10.48           
+##  NA's   :153646           NA's   :153656          
+##  total_mortgage_loans_amount total_mortgage_loans_balance
+##  Min.   :      0             Min.   :      0             
+##  1st Qu.:      0             1st Qu.:      0             
+##  Median :      0             Median :      0             
+##  Mean   :  22458             Mean   :  19179             
+##  3rd Qu.:      0             3rd Qu.:      0             
+##  Max.   :7732500             Max.   :7555508             
+##                                                          
+##  total_auto_loans_balance total_student_loans_balance
+##  Min.   :      0          Min.   :     0             
+##  1st Qu.:      0          1st Qu.:     0             
+##  Median :      0          Median :     0             
+##  Mean   :   6516          Mean   :  7787             
+##  3rd Qu.:  10030          3rd Qu.:     0             
+##  Max.   :1777930          Max.   :827594             
+##                                                      
+##  count_inquiries_3_months count_inquiries_6_months
+##  Min.   : 0.0000          Min.   : 0.000          
+##  1st Qu.: 0.0000          1st Qu.: 0.000          
+##  Median : 0.0000          Median : 1.000          
+##  Mean   : 0.8155          Mean   : 1.414          
+##  3rd Qu.: 1.0000          3rd Qu.: 2.000          
+##  Max.   :53.0000          Max.   :97.000          
+##                                                   
+##  count_inquiries_12_months         recent_bankruptcy_date
+##  Min.   :  0.000                              :259814    
+##  1st Qu.:  0.000           2011-10-31 00:00:00:    39    
+##  Median :  1.000           2017-03-31 00:00:00:    37    
+##  Mean   :  2.581           2018-01-31 00:00:00:    36    
+##  3rd Qu.:  3.000           2018-02-28 00:00:00:    36    
+##  Max.   :137.000           2015-04-30 00:00:00:    33    
+##                            (Other)            : 25496    
+##  count_bankruptcy         age_bucket        credit_score_bucket
+##  Min.   : 0.0000   (25.0, 30.0]:34237   (520.0, 525.0]: 19314  
+##  1st Qu.: 0.0000   (30.0, 35.0]:34168   (515.0, 520.0]: 14206  
+##  Median : 0.0000   (35.0, 40.0]:33043   (550.0, 555.0]: 12005  
+##  Mean   : 0.1016   (45.0, 50.0]:29663   (510.0, 515.0]: 11167  
+##  3rd Qu.: 0.0000   (40.0, 45.0]:29388   (505.0, 510.0]:  9074  
+##  Max.   :10.0000   (50.0, 55.0]:28316   (500.0, 505.0]:  8377  
+##                    (Other)     :96676   (Other)       :211348
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]{Data set}
+
+\begin{itemize}
+\tightlist
+\item
+  The data was from Credit Sesame, a company that calculates credit
+  scores to determine options for credit cards, mortgage rates and
+  loans. This dataset included: -User Demographics - credit profile
+  information including loan histories, tradeline details, etc, and a
+  few personal features such as gender and location -First Session
+  Information - action logs of each user's first interaction with the
+  Credit Sesame website -30-day User Engagement Data - insight into the
+  actions of users in each one's first 30 days which included various
+  logins for each user === Dislay of Data Through Initial Exploration
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#Plot histogram of each column in user_data}
+\NormalTok{data.pre }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gather}\NormalTok{() }\OperatorTok{%>%}\StringTok{ }\KeywordTok{head}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: attributes are not identical across measure variables;
+## they will be dropped
+\end{verbatim}
+
+\begin{verbatim}
+##       key                                    value
+## 1 user_id 50991631a5e7fafd8b5856fc15e3d1a3af5dcf98
+## 2 user_id cabee62f0c4f26bb088f4a48d9ca5efa3a4f96e3
+## 3 user_id 6da929725c76c01aa151d97060df2e6bd051e31e
+## 4 user_id e8a6717452a88ec8d699c0a4181637c67d247e84
+## 5 user_id 03c209fbb349633c40826a83874f92e302382b13
+## 6 user_id ae0ebe7492c5af1fec00c8ecd59f83cc5a659fb2
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{gather}\NormalTok{(data.pre[}\KeywordTok{seq}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{15}\NormalTok{)]), }\KeywordTok{aes}\NormalTok{(value)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{geom_histogram}\NormalTok{(}\DataTypeTok{bins=}\DecValTok{10}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{facet_wrap}\NormalTok{(}\OperatorTok{~}\NormalTok{key, }\DataTypeTok{scales =} \StringTok{'free_x'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Presentation_files/figure-beamer/unnamed-chunk-3-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{gather}\NormalTok{(data.pre[}\KeywordTok{seq}\NormalTok{(}\DecValTok{16}\NormalTok{,}\DecValTok{31}\NormalTok{)]), }\KeywordTok{aes}\NormalTok{(value)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{geom_histogram}\NormalTok{(}\DataTypeTok{bins=}\DecValTok{10}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{facet_wrap}\NormalTok{(}\OperatorTok{~}\NormalTok{key, }\DataTypeTok{scales =} \StringTok{'free_x'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Presentation_files/figure-beamer/unnamed-chunk-3-2.pdf}
+
+\end{frame}
+
+\begin{frame}[fragile]{Exploring the Dataset}
+
+\begin{itemize}
+\tightlist
+\item
+  Started EDA by looking at the distribution of each of the variables in
+  the dataset, as shown in the previous slide.
+\item
+  Almost all the non-categorical data was heavily skewed to the right.
+\item
+  Many variables had high frequency for lower values and significantly
+  lower frequency for higher values
+\item
+  Only non-cateogrical variables not heavily skewed were \texttt{age}
+  and \texttt{credit\_score}.
+\end{itemize}
+
+This was important to keep in mind as we proceeded in our analysis as
+the distribution of each variable can impact the results of our analysis
+methods.
+
+\end{frame}
+
+\begin{frame}{Challenges of the Dataset}
+
+\begin{itemize}
+\tightlist
+\item
+  The skewed distribution of our variables was the biggest challenge for
+  determining how to analyze this data.
+\item
+  Ultimately we did not let the skew effect our methods but were careful
+  to consider it in our analysis.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Methods}
+
+\begin{itemize}
+\tightlist
+\item
+  We used several methods: PCA, Regression Analysis, and k-means
+  clusterng
+\item
+  Our most successful method was the k-means clustering
+\item
+  To evalute this method, we grouped and checked coefficients (CALVIN OR
+  HARI)
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Methods (Continued)}
+
+\begin{itemize}
+\tightlist
+\item
+  How did you analyze the data set
+\item
+  Stick to your best method that worked
+\item
+  How did you evaluate how your method worked
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Results}
+
+\begin{itemize}
+\tightlist
+\item
+  Demographics of people who use Credit Sesame's website differently and
+  access different pages are in fact different. The people who click
+  more on credit or loans are the people who need help in improving
+  those areas. By using k-means clustering, we were able to look at
+  different people as a group, which meant we didn't have to compare
+  individuals to other individuals, and it gives us a better view of
+  what different groups of people are using Credit Sesame.
+\item
+  Again, be sure to use visuals here.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Results (continued)}
+
+\begin{itemize}
+\tightlist
+\item
+  Highlight your results from the methods that you used
+\item
+  Again, be sure to use visuals here.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Conclusions}
+
+Here, you should provide some conclusions regarding the datathon, data
+analysis, etc.
+
+\end{frame}
+
+\end{document}
