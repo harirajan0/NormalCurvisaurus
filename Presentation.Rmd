@@ -93,27 +93,19 @@ Methods
 
 - We used several methods: PCA, Regression Analysis, and k-means clusterng
 - Our most successful method was the k-means clustering
-- To evalute this method, we grouped and checked coefficients (CALVIN OR HARI)
-
-
-Methods (Continued)
-===
-
-- How did you analyze the data set
-- Stick to your best method that worked
-- How did you evaluate how your method worked 
+- To evalute this method, we compared how the data differed between the clusters
 
 Results
 ===
 
-- Demographics of people who use Credit Sesame's website differently and access different pages are in fact different. The people who click more on credit or loans are the people who need help in improving those areas. By using k-means clustering, we were able to look at different people as a group, which meant we didn't have to compare individuals to other individuals, and it gives us a better view of what different groups of people are using Credit Sesame.
-- Again, be sure to use visuals here. 
+- We noticed that in particular, there were two clusters which had relatively high values for `click_count_credit_card` and `click_count_personal_loan`, respectively
+- ADD VISUAL HERE SHOWING THE CLUSTERS
 
 Results (continued)
 ===
 
-- Highlight your results from the methods that you used 
-- Again, be sure to use visuals here. 
+- The users that were grouped into these two clusters had a noticeably large difference in the mean values for several different variables as shown below. Note that these variable values generally correspond to the user's frewuent actions on the Credit Sesame website.
+- ADD VISUAL HERE SHOWING THE DIFFERENCE IN THE MEANS
 
 Conclusions
 ===

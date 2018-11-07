@@ -1,0 +1,26 @@
+---
+title: "Conclusion and Results (continued slide)"
+output: html_document
+---
+
+```{r}
+#Results (Continued) Slide:
+# -	Being a homeowner, your number of open collection accounts, your maximum credit card limit, and the average days since your account has been open, are the most significant indicators of credit score and future delinquent payments
+# -	Our regression coefficients indicate that each account turned over to a third party for collections leads to a 5 point decrease in credit score and homeowners tend to have a credit score that is 20 points above non-homeowners
+# -	Every dollar increase on a credit card limit tends to indicate a 0.0045 point increase in credit score and every day an individual has an account open, his credit score increases by 0.007135 points
+
+
+#Conclusion
+#PCA and Linear Regression: Strong Indicators of Credit Score with unreliable coeffecients
+# -	The strength of our predictive credit score characteristics is statistically significant and the adjusted R squared value of 0.322 supports a correlation
+# -	The concerning residual plot leads us to question the use of variable coefficients in determining credit score
+# -	Our regression results would be best used for more general credit score bucket determination, targeted advertisements, and refining credit scores
+
+#K-means Clustering: Identifying Customer Types for Targeted Advertisements  
+# -	People who look at their credit tend to have worse credit scores, and more specifically have more unpaid balances that negatively impacted their credit
+# -	People who use the loan feature tend to have higher amounts of loans
+# -	Website credit card clientele is separate from the website loan clientele
+# -	Specific areas of the website should cater to specific client groups
+
+```
+
