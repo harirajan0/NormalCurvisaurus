@@ -110,5 +110,6 @@ Results (continued)
 Conclusions
 ===
 
-Here, you should provide some conclusions regarding 
-the datathon, data analysis, etc. 
+- Our PCA and Linear Regression Analysis both support the conclusion that longer opened accounts and higher credit card limits are two of the strongest indicators of credit scores. Additionally, homeowner status and number of accounts turned over to collection agencies as strong predictors of credit score.
+- Our k-means clustering concluded that Credit Sesame's website clientele that use the credit card links are different from the people who used the website for loans.
+- Future Work: Moving fowards, we can work to improve the current models that we used. For example, our regression model could've been improved using other regression methods such as Lasso or ElasticNet so we wouldn't have to do feature selection by hand. Additionally, we could've tried clustering by usuing hierarchical clustering to see if we could get more informative results. 
