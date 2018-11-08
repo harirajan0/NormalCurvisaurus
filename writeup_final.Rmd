@@ -1,0 +1,461 @@
+---
+title: "Credit Sesame Consumer Report"
+author: "Audreya Metz, Calvin Ma, Hari Rajan, Paul Giroud"
+keywords: pandoc, r markdown, knitr
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+abstract: The analysis of the Credit Sesame data was done using various methods including
+  principle component analysis (PCA), linear regression, and k-means clustering. It
+  is important to not that the given data is shown to be heavily skewed to the right
+  which affected much of the results of our analysis methods. The main focus of the
+  study was to identify factors that impact an individual's credit score and to better
+  understand how different users interact with the Credit Sesame website differently.
+  From the principle component analysis and the linear regression, we were able to
+  identify variables that were positively and negatively correlated with credit score
+  which gives us insight as to what factors can help to predict an individuals credit
+  score. In particular, it was found that homeowner status, length of opened accounts,
+  credit card limits, and number of accounts turned over to collection agencies were
+  heavily correlated to credit score. From the k-means clustering, we were able to
+  distinguish between users that use the credit card links and those whoused the website
+  for loans and understand how the demographics ofusers from these two groups differ
+  (ie. loan amount, credit score, etc.).
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.width = 5, fig.height=4,cache=TRUE)
+```
+
+
+\newpage
+
+## 1 Introduction
+Determining the appropriate consumer to give loans to is a difficult task that can depend on many factors. We analyzed data from Credit Sesame, a company that calculates credit scores to determine options for credit cards, mortgage rates and loans, to determine the best candidates for loans. Their dataset included three parts: User Demographics, First Session Information and 30-day User Engagement Data. The user demographics data included mostly credit profile information including loan histories, tradeline details, and also some personal information.The First Session data provided action logs of each user's first interaction with the Credit Sesame website. Finally, the 30-day user engagement gave insight into the actions of users in each one's first 30 days with similar features as the first session data.
+We believe that identifying accurate credit scores with both financial and non-financial data can be of use to Credit Sesame. If Credit Sesame could approximate credit scores from certain characteristics, they could choose better candidates to give loans to. Our ultimate goal was to see what variables were strong indicators of credit score and delinquencies. We also found it relevant to explore the engagement habits of certain demographics groups with the Credit Sesame website. 
+To accomplish these tasks, we used 4 tools: PCA, Linear Regression, Lasso Regression and K-means clustering. PCA, linear regression and lasso regression were used with the user demographics data to explore which features had a significant impact on the credit score, and by how much. The k-mean clustering was used with both the user demographics and 30-day engagement to cluster similar users based on their engagement and then compare the difference between users of differing clusters. 
+The credit score of an individual is heavily linked to their homeowner status, length of opened accounts, credit card limits, and number of accounts turned over to collection agencies. While Credit Sesame can use any/all of these factors to estimate individual's credit score, the results of our regression are not extremely convincing. The strength of our regression leads us to believe the results would be best used to refine an individual's calculated credit score or group individuals in larger credit score buckets for targeted advertising. Credit Sesame should also consider more targeted advertising on certain parts of their website after we've seen different customer traits based on what they use the website for.
+
+## 2 Data set
+### 2.1 Exploratory Data Analysis
+We started our exploratory data analysis by first looking at the distribution of each of the variables in the dataset. We noticed that almost all the non-categorical data were heavily skewed to the right as many of the variables had a high frequency for lower values and significantly lower frequency for higher values. From the histograms (Figures 6, 7), we can see how most features have many zeroes with other values typically outside of the 75th percentile. The only non-cateogrical variables that were not heavily skewed were `age` and `credit_score`. This was important to keep in mind as we proceeded in our analysis as the distribution of each variable can impact the results of our analysis methods. Although the sparcity of the data could negatively impact our data, we decided to keep them in because it is an inherent characteristic of the data. Knowing that we wanted to fit a linear regression of all the features with credit score, we plotted each feature vs. credit score for all users after preprocessing (Figures 4,5). From the plots, we saw that a few of the features had a clear linear relationship with credit_score. We used this information for feature selection later during the linear regression, making sure to keep features that had a clear relationship. However, we also had to be wary of the non-normal distribution of the credit_score - we can see the long tails of the qqplot of the credit_score (FIGURE 17). We also used the correlation matrix to help us determine what features were highly correlated with others (Figure 18). Since linear regression struggles with correlated variables, we kept the values that were highly correlated (correlation coefficient > 0.7) in mind, and we planned to remove these first during the linear regression. 
+
+## 3 Methods
+**3.1 PCA:** We used Principle Component Analysis because it is a powerful tool that can be used for both exploratory data analysis and also making conclusions about the dataset.We wanted some method to visualize the relationship between data points, but the dataset's dimensionality was too large to plot. Using PCA, we could plot Principle Components in order to have some sort of visualization of the data, and can offer some intuition of the relationships between data. We looked at the biplot and the loadings and saw how correlated various features are within each principle component, we used the correlated variables to determine which features to keep in or leave out of the regression. 
+
+**3.2 Linear Regression:** Based on our EDA and PCA results, we modeled a regression on credit score using the given demographic variables. Using our PCA results, we were able to to load the initial model with variables that ppeared to be correlated with credit score. This initial model had a decent R-squared of about .36 then we began to remove the least significant predictors to create a leaner model and ensure no colinearity. Every time a variable was removed we would check that the R-squared > .30. Finally, we reviewed our residual plot and found that we had some clustering indicative of colinearity in the model.
+
+**3.3 $k$-Means:** K-means clustering allows us to find groups of similar datapoints. By dictating a number of clusters we expect to see, the algorithm will find the closest subset of datapoints for each of clusters. This model is useful because it gives us a definitive way to find which datapoints are related. For our dataset, we can take datapoints for different clusters and view them as a collective, and find the demographics of the clusters based on its datapoints. 
+
+## 4 Applications
+**4.1 Applications for PCA:** After doing PCA on the user_demographics, the first thing that we looked at was the plot of PC1 vs. PC2. The plot is clearly just a large clump of datapoints (Figure 8). To find some meaning from it, we also plotted the biplot of the PCA (Figure 9). The biplot revealed much more information about the loadings and relationships between values. We can see that the entire first loading is negative. The second loading is much more interesting - there is a split between the PC2 loadings. It is difficult to interpret the meaning of the loadings as a whole, but we can see that the positive correlations easily differentiable from the negative loadings. Next, we looked at the loadings themselves and scree plot of the PCs. From the scree plot (Figure 10), we see that PC4 is the last significant PC that provides a large decrease in variance. Finally, we interpreted the Principle Components loadings by looking at PC1 through PC4 (Figure 11). The values of the loadings correspond to the correlation coefficient of the variable with that principle component. What we are looking for in the loadings are values that are related to credit_score. From the first PC, we see that all of the correlation values are negative, some more than others. Credit_score has a loading of -0.23, which means it is moderately related to PC1, but we cannot make any conclusion with respect to the other variables. PC2 gives us much more information. The correlation for credit_score in PC2 is 0.29, and we can see other variables that are relatively large positive numbers and small negative numbers. Looking at the large positive correlations, we can see that tradelines_avg_days_since_opened, max_cc_limit, and total_mortgage_loans_balance are strongly positively correlated with credit_score. This means that as these values increase, we would expect to see credit_score increase as well. And we see that the negative loadings would be negatively correlated with credit score. We can continue down the line with PC3 and PC4, but the interpretability goes down as you analyze more principle components and they become less significant. From our PCA, we determined which features are correlated with each other, which provided us with useful information that was used for future analysis. Although the interpretability of PCA is lower than other models, we can still determine relationships between variables and datapoints.
+
+**4.2 Applications for Regression:** From applications, we can see how our group removed the features that eventually led to our current model. Initially when we fit all of the variables, each one was determined to be significant (p value < 0.05). However, we did not want to have so many variables in our models, especially after seeing collinearity in our plots. This is why we decided to remove variables based on R-squared. Our current regression model (Figure 12) indicates that being a homeowner, your number of open collection accounts, your maximum credit card limit, and the average days since your account has been open, are the most significant indicators of credit score and future delinquent payments. We expected open collections to have a strong predictive relationship with delinquencies and credit score since open collections are caused by missed payments. Our results indicate that each account turned over to a third party for collections leads to a 5-point decrease in credit score. Homeowners tend to have a credit score that is 20 points above non-homeowners. This makes sense because homeowners tend to be more financially stable.  Every dollar increase on a credit card limit tends to indicate a 0.0045-point increase in credit score. This is probably explained by the fact that people with better credit scores who are more financially stable are given larger credit card limits. We also found that with every day an individual has an account open, his credit score increases by 0.007135 points. This last finding is also logical because accounts that stay open are accounts that have gone longer making payments. Unfortunately, we only reached around 0.35 R-squared, which could be improved. The further limits of this regression lie in the skewed overall distribution of this data, which resulted in residual plots (Figure 13) for the model that indicate that we must be wary using this model.
+
+**4.3 Applications for $k$-means Clustering:** From our preprocessed data of clicks on different parts of the website, we start to run the k-means clustering algorithm. We found the within-sum-squares of k = 1 through 20 (Figure 14).Between 5 and 8 number of clusters seems to be where the amount where the within-cluster sum of squares difference starts to drop off. Therefore, we will use 8 clusters. Looking at Figure 15, we see that cluster 7 and 4 have relatively high values for click_count_credit_card and click_count_personal_loan, respectively. This means that the clustered groups tend to click on the these sites more often. The other clusters are all more centered to the origin. We then compare the user demographic for users of different groups. FIGURE 16 shows all of the features between the two groups. We can see that in several categories there is quite a large difference between the mean variables of the two clustered groups. The users who click on the credit pages more often have a lower credit score, have inflated values that are associated with good credit, and the click_loan group tend to have higher loan amounts. From the k-means clusters, we were able to determine that the demographics of people who use Credit Sesame's website differently and access different pages are in fact different. 
+
+## 5 Discussion
+Our PCA and Linear Regression Analysis both support the conclusion that longer opened accounts and higher credit card limits are two of the strongest indicators of credit scores. They also support homeowner status and number of accounts turned over to collection agencies as strong predictors of credit score. Our linear regression interpretation in the applications section defines our estimate for the strength of these indicators based off of how they are measured. However, the concerning linear cluster in out residual plot lead us to take the coefficients lightly. While we are confident that these factors are strongly linked to an individual's credit score, using them to estimate an individual's exact credit score could be problematic. We believe that it would be best to use our results to estimate more general credit score buckets for targeted advertisements since the precise effect of our variables is questionable.
+
+Our k-means clustering concluded that Credit Sesame's website clientele that use the credit card links are different from the people who used the website for loans. Credit Sesame can use this information to more specifically target advertise credit cards to one group and loans to another. The clustering also concluded that people who look at their credit tend to have worse credit scores, and more specifically have more unpaid balances that negatively impacted their credit. Naturally the clustering also indicated that people who use the loan feature tend to have higher amounts of loans. All of this information can help credit sesame advertise to specific groups of customers in different areas of their website. 
+
+Future Work: Moving fowards, we can work to improve the current models that we used, namely the linear regression and clustering. In our linear regression, we starting modeling knowing that variables were highly correlated. Using other regression methods such as Lasso or ElasticNet would mean we wouldn't have to do feature selection by hand (See Appendix for Lasso result). For the k-means clustering, other clustering methods could be used such as hierarchical clustering. It is hard to say if they would produce better results, but they would give us another perspective on the data. We could also run a logistic regression using the results of our linear regression to decide whether or not to give loans to individuals based on their demographics. 
+
+**6 Appendix**
+
+### Preprossesing
+
+We did different forms of preprocessing for each of the different methods (from working separately on different parts). 
+
+* To clean the user profile data and make it more manageable, we removed any rows with any NA's and removed users with gender marked as "unisex". We removed the unisex because there was an extremely large number of unisex users, which led us to believe that unisex represented the users who didn't want to choose which sex they were. We also removed the user_signup_timesteamp, state and zipcode features since we decided they were unnecessary. For other features, there seemed to be overlapping information that were redundant and colinear- Cases like avg_days vs. max_days were not both necessary since avg_days accounts for max_days, so we removed rows that represented the same information. Finally, in dealing with bucketed age and credit scores, we parsed the min and max of the buckets and had numerical values as the average of the min & max of the bucket. This means that we don't have to deal with numberous dummy variables. 
+
+* The regression required minimal preprocessing as any variabes that we felt were not useful or colinear could simply be excluded from the regression model. The bulk of the preprocessing done for the regression was in creating dummy variables for the categorical that were to be included in the model and converting categorical bins for age and credit score to numerical variables.
+
+* The k-means clustering was meant as a way to cluster users based on their engagement. We decided that the best way to gauge engagement is based on the number of clicks per page. So, we took the 30 day engagement dataset and only took the features that represented clicks per various pages like credit cards, loans, etc. Although the dataset was very sparse, we didn't need to preprocess it any further. 
+
+```{r, echo=FALSE, cache=TRUE}
+#Some Preprocessing
+
+#Load necessary packages
+suppressWarnings(library("magrittr"))
+suppressWarnings(library("tidyr"))
+suppressWarnings(library("ggplot2"))
+```
+```{r, echo=FALSE, cache=TRUE}
+#Reading in the data
+user_data = read.csv('data/user_profile.csv')
+
+#Removing columns that are redundant and cover the same information
+data.pre = user_data[-c(1, 3, 4, 5, 27, 28, 36)]
+
+#ishomeowner, gender(remove unisex), remove NA from 8, 9, 10, 27, 28
+data.pre = subset(data.pre, (data.pre$gender == 'Male' | data.pre$gender == 'Female'))
+data.pre= na.omit(data.pre)
+data.pre$gender = data.pre$gender == 'Female'
+data.pre$is_homeowner = data.pre$is_homeowner == 'True'
+cols <- sapply(data.pre, is.logical)
+data.pre[,cols] <- lapply(data.pre[,cols], as.numeric)
+
+#turning the buckets into continous values - we average the bucket's min & max to the middle value
+
+#cor(data.pre[-1])
+
+decode_bucket <- function(fctr) {
+  fctr <- gsub("[()]", '', fctr)
+  fctr <- gsub("\\]", '', fctr)
+  bounds <- strsplit(fctr, ", ")
+  return(mean(as.numeric(bounds[[1]])))
+}
+data.pre$age = unlist(lapply(data.pre$age_bucket, FUN = decode_bucket))
+data.pre$credit_score = unlist(lapply(data.pre$credit_score_bucket, FUN = decode_bucket))
+data.pre = na.omit(data.pre)
+
+#removing bucketed columns
+data.pre = data.pre[-c(31,32)]
+```
+
+##Lasso: 
+
+Regular linear regression cannot work properly when features are highly correlated. However, Lasso is a form of linear regression that allows us to input a dataset with correlated variables. Lasso will account for these variables and remove them based on the lambda regularization. We used this method because our process of removing features by hand using the R-squared was slow and had a lot of room of error.  
+
+```{r, echo=FALSE, message=FALSE, cache=TRUE}
+#preprocessing and creating test,training data
+data.pre.lasso = data.pre[,-c(1)]
+set.seed(1)
+train = sample(1:nrow(data.pre.lasso), nrow(data.pre.lasso))
+y = data.pre.lasso[[31]]
+x.matrix = data.matrix(data.pre.lasso[-c(31)],rownames.force = NA)
+test = (-train)
+y.test = y[test]
+
+suppressWarnings(library(glmnet))
+
+#fitting the lasso using the data - cv includes cross validation
+cv_fit_lasso = cv.glmnet(x.matrix[train,], y[train], alpha=1)
+fit_lasso = glmnet(x.matrix[train,], y[train], alpha=1)
+
+#plotting the coefficient values vs. lambda regularization value
+suppressWarnings(plot(fit_lasso))
+```
+\begin{center}
+Figure 1: Lasso - Coefficient Values vs. Lambda Regularization
+\end{center}
+```{r, echo=FALSE, message=FALSE, cache=TRUE}
+#MSE vs. log(lambda) just some more EDA
+suppressWarnings(plot(cv_fit_lasso, xvar="lambda"))
+```
+\begin{center}
+Figure 2: Lasso - MSE vs. Log(Lambda)
+\end{center}
+```{r, echo=FALSE, message=FALSE, cache=TRUE}
+#   This shows us the R-squared for various models given the Degress of Freedom (the number of 
+#   features) and the lambda value. 
+fit = cv_fit_lasso$glmnet.fit
+
+#   Shows us the coefficients of various features when a regularization of 4 is used. We can see
+#   how Lasso automatically makes some of the variable coefficients to 0. 
+coef(fit, s=4)
+```
+\begin{center}
+Figure 3: Feature Coefficients for Lasso with Lambda = 4
+\end{center}
+```{r, echo=FALSE, message = FALSE, cache=TRUE}
+data.pre.pca = data.pre[-c(1, 5, 6, 9, 12, 13, 14, 19, 20, 23, 27, 29)]
+
+```
+```{r, echo=FALSE, message = FALSE}
+
+# gender dummy variable
+user_data$gender_cat[user_data$gender=="Male"]= 0
+user_data$gender_cat[user_data$gender=="Female"]= 1
+
+# homeowner dummy variable
+user_data$home_cat[user_data$is_homeowner=="False"]= 0
+user_data$home_cat[user_data$is_homeowner=="True"]= 1
+
+# make age categorical into numeric
+user_data$age_cat[user_data$age_bucket=="(15.0, 20.0]"]= 0
+user_data$age_cat[user_data$age_bucket=="(20.0, 25.0]"]= 1
+user_data$age_cat[user_data$age_bucket=="(25.0, 30.0]"]= 2
+user_data$age_cat[user_data$age_bucket=="(30.0, 35.0]"]= 3
+user_data$age_cat[user_data$age_bucket=="(35.0, 40.0]"]= 4
+user_data$age_cat[user_data$age_bucket=="(40.0, 45.0]"]= 5
+user_data$age_cat[user_data$age_bucket=="(45.0, 50.0]"]= 6
+user_data$age_cat[user_data$age_bucket=="(50.0, 55.0]"]= 7
+user_data$age_cat[user_data$age_bucket=="(55.0, 60.0]"]= 8
+user_data$age_cat[user_data$age_bucket=="(60.0, 65.0]"]= 9
+user_data$age_cat[user_data$age_bucket=="(65.0, 70.0]"]= 10
+user_data$age_cat[user_data$age_bucket=="(70.0, 75.0]"]= 11
+user_data$age_cat[user_data$age_bucket=="(75.0, 80.0]"]= 12
+user_data$age_cat[user_data$age_bucket=="(80.0, 85.0]"]= 13
+user_data$age_cat[user_data$age_bucket=="(85.0, 90.0]"]= 14
+user_data$age_cat[user_data$age_bucket=="(90.0, 95.0]"]= 15
+user_data$age_cat[user_data$age_bucket=="(95.0, 100.0]"]= 16
+
+# convert credit categorical into numeric
+user_data$credit_cat[user_data$credit_score_bucket=="(495.0, 500.0]"]= 0
+user_data$credit_cat[user_data$credit_score_bucket=="(500.0, 505.0]"]= 1
+user_data$credit_cat[user_data$credit_score_bucket=="(505.0, 510.0]"]= 2
+user_data$credit_cat[user_data$credit_score_bucket=="(510.0, 515.0]"]= 3
+user_data$credit_cat[user_data$credit_score_bucket=="(515.0, 520.0]"]= 4
+user_data$credit_cat[user_data$credit_score_bucket=="(520.0, 525.0]"]= 5
+user_data$credit_cat[user_data$credit_score_bucket=="(525.0, 530.0]"]= 6
+user_data$credit_cat[user_data$credit_score_bucket=="(530.0, 535.0]"]= 7
+user_data$credit_cat[user_data$credit_score_bucket=="(535.0, 540.0]"]= 8
+user_data$credit_cat[user_data$credit_score_bucket=="(540.0, 545.0]"]= 9
+user_data$credit_cat[user_data$credit_score_bucket=="(545.0, 550.0]"]= 10
+user_data$credit_cat[user_data$credit_score_bucket=="(550.0, 555.0]"]= 11
+user_data$credit_cat[user_data$credit_score_bucket=="(555.0, 560.0]"]= 12
+user_data$credit_cat[user_data$credit_score_bucket=="(560.0, 565.0]"]= 13
+user_data$credit_cat[user_data$credit_score_bucket=="(565.0, 570.0]"]= 14
+user_data$credit_cat[user_data$credit_score_bucket=="(570.0, 575.0]"]= 15
+user_data$credit_cat[user_data$credit_score_bucket=="(575.0, 580.0]"]= 16
+user_data$credit_cat[user_data$credit_score_bucket=="(580.0, 585.0]"]= 17
+user_data$credit_cat[user_data$credit_score_bucket=="(585.0, 590.0]"]= 18
+user_data$credit_cat[user_data$credit_score_bucket=="(590.0, 595.0]"]= 19
+user_data$credit_cat[user_data$credit_score_bucket=="(595.0, 600.0]"]= 20
+user_data$credit_cat[user_data$credit_score_bucket=="(600.0, 605.0]"]= 21
+user_data$credit_cat[user_data$credit_score_bucket=="(605.0, 610.0]"]= 22
+user_data$credit_cat[user_data$credit_score_bucket=="(610.0, 615.0]"]= 23
+user_data$credit_cat[user_data$credit_score_bucket=="(615.0, 620.0]"]= 24
+user_data$credit_cat[user_data$credit_score_bucket=="(620.0, 625.0]"]= 25
+user_data$credit_cat[user_data$credit_score_bucket=="(625.0, 630.0]"]= 26
+user_data$credit_cat[user_data$credit_score_bucket=="(630.0, 635.0]"]= 27
+user_data$credit_cat[user_data$credit_score_bucket=="(635.0, 640.0]"]= 28
+user_data$credit_cat[user_data$credit_score_bucket=="(640.0, 645.0]"]= 29
+user_data$credit_cat[user_data$credit_score_bucket=="(645.0, 650.0]"]= 30
+user_data$credit_cat[user_data$credit_score_bucket=="(650.0, 655.0]"]= 31
+user_data$credit_cat[user_data$credit_score_bucket=="(655.0, 660.0]"]= 32
+user_data$credit_cat[user_data$credit_score_bucket=="(660.0, 665.0]"]= 33
+user_data$credit_cat[user_data$credit_score_bucket=="(665.0, 670.0]"]= 34
+user_data$credit_cat[user_data$credit_score_bucket=="(670.0, 675.0]"]= 35
+user_data$credit_cat[user_data$credit_score_bucket=="(675.0, 680.0]"]= 36
+user_data$credit_cat[user_data$credit_score_bucket=="(680.0, 685.0]"]= 37
+user_data$credit_cat[user_data$credit_score_bucket=="(685.0, 690.0]"]= 38
+user_data$credit_cat[user_data$credit_score_bucket=="(690.0, 695.0]"]= 39
+user_data$credit_cat[user_data$credit_score_bucket=="(695.0, 600.0]"]= 40
+user_data$credit_cat[user_data$credit_score_bucket=="(700.0, 705.0]"]= 41
+user_data$credit_cat[user_data$credit_score_bucket=="(705.0, 710.0]"]= 42
+user_data$credit_cat[user_data$credit_score_bucket=="(710.0, 715.0]"]= 43
+user_data$credit_cat[user_data$credit_score_bucket=="(715.0, 720.0]"]= 44
+user_data$credit_cat[user_data$credit_score_bucket=="(720.0, 725.0]"]= 45
+user_data$credit_cat[user_data$credit_score_bucket=="(725.0, 730.0]"]= 46
+user_data$credit_cat[user_data$credit_score_bucket=="(730.0, 735.0]"]= 47
+user_data$credit_cat[user_data$credit_score_bucket=="(735.0, 740.0]"]= 48
+user_data$credit_cat[user_data$credit_score_bucket=="(740.0, 745.0]"]= 49
+user_data$credit_cat[user_data$credit_score_bucket=="(745.0, 750.0]"]= 50
+user_data$credit_cat[user_data$credit_score_bucket=="(750.0, 755.0]"]= 51
+user_data$credit_cat[user_data$credit_score_bucket=="(755.0, 760.0]"]= 52
+user_data$credit_cat[user_data$credit_score_bucket=="(760.0, 765.0]"]= 53
+user_data$credit_cat[user_data$credit_score_bucket=="(765.0, 770.0]"]= 54
+user_data$credit_cat[user_data$credit_score_bucket=="(770.0, 775.0]"]= 55
+user_data$credit_cat[user_data$credit_score_bucket=="(775.0, 780.0]"]= 56
+user_data$credit_cat[user_data$credit_score_bucket=="(780.0, 785.0]"]= 57
+user_data$credit_cat[user_data$credit_score_bucket=="(785.0, 790.0]"]= 58
+user_data$credit_cat[user_data$credit_score_bucket=="(790.0, 795.0]"]= 59
+user_data$credit_cat[user_data$credit_score_bucket=="(795.0, 800.0]"]= 60
+```
+```{r, echo=FALSE, cache=TRUE}
+#reading in data
+user_engage_data = read.csv('data/user_engagement.csv')
+
+#We are taking the click counts for differnt types of pages
+user_engage_actions = user_engage_data[c(21, 22, 23, 24, 25, 26)]
+```
+```{r, echo=FALSE, cache=TRUE}
+#More EDA, seeing which variables have a relationship with credit score - used to determine features in Linear Regression
+par(mfrow=c(3,3))
+plot(x = data.pre$tradelines_avg_days_since_opened, y = data.pre$credit_score, xlab = "tradelines_avg_days_since_opened",
+     ylab = "credit_score") #no 
+plot(x = data.pre$count_total_tradelines_opened_24_months, y = data.pre$credit_score, xlab = "count_total_tradelines_opened_24_months",
+     ylab = "credit_score") #maybe
+plot(x = data.pre$count_tradelines_condition_derogatory, y = data.pre$credit_score, xlab = "count_tradelines_condition_derogatory",
+     ylab = "credit_score") #yes
+plot(x = data.pre$count_open_installment_accounts_24_months, y = data.pre$credit_score, xlab = "count_open_installment_accounts_24_months",
+     ylab = "credit_score") #maybe
+plot(x = data.pre$count_tradelines_opened_accounts, y = data.pre$credit_score, xlab = "count_tradelines_opened_accounts",
+     ylab = "credit_score") #no
+plot(x = data.pre$count_tradelines_open_secured_loans, y = data.pre$credit_score, xlab = "count_tradelines_open_secured_loans",
+     ylab = "credit_score") #maybe
+plot(x = data.pre$count_tradelines_open_unsecured_loans, y = data.pre$credit_score, xlab = "count_tradelines_open_unsecured_loans",
+     ylab = "credit_score") #maybe
+```
+\begin{center}
+Figure 4: Scatter plot of Features vs. Credit Score Part 1
+\end{center}
+```{r, echo=FALSE, cache=TRUE}
+par(mfrow=c(3,3))
+plot(x = data.pre$total_tradelines_amount_past_due, y = data.pre$credit_score, xlab = "total_tradelines_amount_past_due",
+     ylab = "credit_score") #yes
+plot(x = data.pre$total_tradelines_open_balance, y = data.pre$credit_score, xlim = c(0, 1000000), xlab = "total_tradelines_open_balance",
+     ylab = "credit_score") #no
+plot(x = data.pre$max_cc_limit, y = data.pre$credit_score, xlim = c(0, 150000), xlab = "max_cc_limit",
+     ylab = "credit_score") #yes
+plot(x = data.pre$total_mortgage_loans_balance, y = data.pre$credit_score, xlim = c(0, 4000000), xlab = "total_mortgage_loans_balance",
+     ylab = "credit_score") #no
+plot(x = data.pre$count_bankruptcy, y = data.pre$credit_score, xlab = "count_bankruptcy",
+     ylab = "credit_score") #yes
+plot(x = data.pre$age, y = data.pre$credit_score, xlab = "age",
+     ylab = "credit_score") #no
+```
+\begin{center}
+Figure 5: Scatter plot of Features vs. Credit Score Part 2
+\end{center}
+```{r, echo=FALSE, cache=TRUE}
+#Plot histogram of each column in user_data
+data.pre %>% gather() %>% head()
+ggplot(gather(data.pre[seq(2,15)]), aes(value)) + 
+    geom_histogram(bins=10) + 
+    facet_wrap(~key, scales = 'free_x')
+```
+\begin{center}
+Figure 6: Histogram of Features Part 1
+\end{center}
+```{r, echo=FALSE, cache=TRUE}
+ggplot(gather(data.pre[seq(16,31)]), aes(value)) + 
+    geom_histogram(bins=10) + 
+    facet_wrap(~key, scales = 'free_x')
+```
+\begin{center}
+Figure 7: Histogram of Features Part 2
+\end{center}
+```{r, echo=FALSE, cache=TRUE}
+#doing PCA over the preprocessed dataset and saving loadings 
+data.pca = prcomp(data.pre.pca, scale=TRUE)
+loadings = data.pca$rotation
+```
+```{r, echo=FALSE, cache=TRUE}
+#plotting PC1 and PC2
+plot(data.pca$x[,1:2])
+```
+\begin{center}
+Figure 8: Plot of PC1 and PC2
+\end{center}
+```{r, echo=FALSE, cache=TRUE}
+#creating the biplot
+biplot(data.pca, scale=0, cex=0.7)
+```
+\begin{center}
+Figure 9: Biplot of PC1 and PC2
+\end{center}
+```{r, echo=FALSE, cache=TRUE}
+#creating the screeplot
+screeplot(data.pca, type = "lines", main = "Principle Components vs. Variance")
+```
+\begin{center}
+Figure 10: Screeplot of the PCAs
+\end{center}
+```{r, echo=FALSE, cache=TRUE}
+#printing out the loadings for PC1 through PC4
+loadings[,1:4]
+```
+\begin{center}
+Figure 11: PCA Loadings for PC1 through PC4
+\end{center}
+```{r, echo=FALSE, cache=TRUE}
+# final regresson model
+finalreg <- lm(credit_cat~ home_cat + count_tradelines_open_collection_accounts + max_cc_limit + tradelines_avg_days_since_opened, user_data)
+
+# summary of final regression model
+summary(finalreg)
+```
+\begin{center}
+Figure 12: summary of the Final Linear Regression
+\end{center}
+```{r, echo=FALSE, cache=TRUE}
+
+# plot the residuals
+plot(predict(finalreg),residuals(finalreg), main= "Regression Residuals")
+```
+\begin{center}
+Figure 13: Residuals for the Linear Regression
+\end{center}
+```{r, echo=FALSE, cache=TRUE}
+#calculating the wss for various clusters
+k.max <- 20
+data <- user_engage_actions
+wss <- sapply(1:k.max, 
+              function(k){kmeans(data, k, nstart=50,iter.max = 15 )$tot.withinss})
+
+#ploting the wws vs. number of clusters. 
+plot(1:k.max, wss,
+     type="b", pch = 19, frame = FALSE, 
+     xlab="Number of clusters K",
+     ylab="Total within-clusters sum of squares")
+```
+\begin{center}
+Figure 14: WSS for various K number of Clusters
+\end{center}
+```{r, echo=FALSE, cache=TRUE}
+#clustering the user click data using 8 clusters
+set.seed(10)
+kmeanclusters = kmeans(user_engage_actions, 8, nstart=20)
+kmeanclusters$centers
+```
+Figure 15: Cluster Coordinates 
+```{r, echo=FALSE, cache=TRUE}
+#from the clustering, we can see that there are two clusters with larger values in particular columns (see report for interpretation). We want the user IDs of the people who had the inflated column values. 
+click_credit_card = user_engage_data[which(kmeanclusters$cluster == 7),]
+click_personal_loan = user_engage_data[which(kmeanclusters$cluster == 4),]
+
+#creating a subset of user demographics that relate to the people with inflated column values
+click_credit_users = subset(data.pre, data.pre$user_id %in% click_credit_card$user_id)
+click_loan_users = subset(data.pre, data.pre$user_id %in% click_personal_loan$user_id)
+
+#comparing the user demographics of the two groups of people
+options(scipen=999)
+
+compare = matrix(c(mean(click_credit_users$is_homeowner), mean(click_loan_users$is_homeowner),
+                   mean(click_credit_users$gender), mean(click_loan_users$gender),
+                   mean(click_credit_users$tradelines_avg_days_since_opened), mean(click_loan_users$tradelines_avg_days_since_opened),
+                   mean(click_credit_users$tradelines_max_days_since_opened), mean(click_loan_users$tradelines_max_days_since_opened),
+                   mean(click_credit_users$tradelines_min_days_since_opened), mean(click_loan_users$tradelines_min_days_since_opened),
+                   mean(click_credit_users$count_tradelines_closed_accounts), mean(click_loan_users$count_tradelines_closed_accounts),
+                   mean(click_credit_users$count_total_tradelines_opened_24_months), mean(click_loan_users$count_total_tradelines_opened_24_months),
+                   mean(click_credit_users$count_tradelines_cc_opened_24_months), mean(click_loan_users$count_tradelines_cc_opened_24_months),
+                   mean(click_credit_users$count_tradelines_condition_derogatory), mean(click_loan_users$count_tradelines_condition_derogatory),
+                   mean(click_credit_users$count_open_installment_accounts_24_months), mean(click_loan_users$count_open_installment_accounts_24_months),
+                   mean(click_credit_users$count_tradelines_open_collection_accounts), mean(click_loan_users$count_tradelines_open_collection_accounts),
+                   mean(click_credit_users$count_tradelines_open_mortgages), mean(click_loan_users$count_tradelines_open_mortgages),
+                   mean(click_credit_users$count_tradelines_open_student_loans), mean(click_loan_users$count_tradelines_open_student_loans),
+                   mean(click_credit_users$count_tradelines_opened_accounts), mean(click_loan_users$count_tradelines_opened_accounts),
+                   mean(click_credit_users$count_tradelines_open_secured_loans), mean(click_loan_users$count_tradelines_open_secured_loans),
+                   mean(click_credit_users$count_tradelines_open_unsecured_loans), mean(click_loan_users$count_tradelines_open_unsecured_loans),
+                   mean(click_credit_users$total_tradelines_amount_past_due), mean(click_loan_users$total_tradelines_amount_past_due),
+                   mean(click_credit_users$total_open_cc_amount_past_due), mean(click_loan_users$total_open_cc_amount_past_due),
+                   mean(click_credit_users$total_cc_open_balance), mean(click_loan_users$total_cc_open_balance),
+                   mean(click_credit_users$total_tradelines_open_balance), mean(click_loan_users$total_tradelines_open_balance),
+                   mean(click_credit_users$max_cc_limit), mean(click_loan_users$max_cc_limit),
+                   mean(click_credit_users$total_mortgage_loans_amount), mean(click_loan_users$total_mortgage_loans_amount),
+                   mean(click_credit_users$total_mortgage_loans_balance), mean(click_loan_users$total_mortgage_loans_balance),
+                   mean(click_credit_users$total_auto_loans_balance), mean(click_loan_users$total_auto_loans_balance),
+                   mean(click_credit_users$total_student_loans_balance), mean(click_loan_users$total_student_loans_balance),
+                   mean(click_credit_users$count_inquiries_3_months), mean(click_loan_users$count_inquiries_3_months),
+                   mean(click_credit_users$count_inquiries_6_months), mean(click_loan_users$count_inquiries_6_months),
+                   mean(click_credit_users$count_inquiries_12_months), mean(click_loan_users$count_inquiries_12_months),
+                   mean(click_credit_users$count_bankruptcy), mean(click_loan_users$count_bankruptcy),
+                   mean(click_credit_users$age), mean(click_loan_users$age),
+                   mean(click_credit_users$credit_score), mean(click_loan_users$credit_score)),ncol = 2, byrow = TRUE)
+
+
+colnames(compare) = c("click_credit", "click_loan")
+rownames(compare) = names(click_credit_users[-c(1)])
+compare
+```
+\begin{center}
+Figure 16: Demographic Comparison between Click Credit Users and Click Loan Users
+\end{center}
+```{r, echo=FALSE, cache=TRUE}
+#plotting qq plot from credit score - checking normality of credit score
+qqnorm(data.pre$credit_score)
+qqline(data.pre$credit_score)
+```
+\begin{center}
+Figure 17: QQ-Plot of Credit Score
+\end{center}
+```{r, echo=FALSE, cache=TRUE}
+#correlation matrix of preprocessed variables - the output was too long so we truncated the output
+head(cor(data.pre[-c(1)]))
+```
+\begin{center}
+Figure 18: Correlation Matrix of Variables
+\end{center}
