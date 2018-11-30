@@ -1,25 +1,29 @@
 ---
-title: "Datathon Slide Template"
-author: "Rebecca C. Steorts"
+title: "Credit Sesame Data Analysis and Findings"
+author: "Hari Rajan, Paul Giraud, Audreya Metz, and Calvin Ma"
 date: September 27 2018
 output: 
      beamer_presentation:
       includes: 
           in_header: slide-template/custom2.tex
+fig_width: 4
+fig_height: 2
           
 
 font-size: 12px
 ---
-```{r, echo=FALSE}
+```{r load, warning=FALSE, include=FALSE}
 #Load necessary packages
-library("magrittr")
-library("tidyr")
-library("ggplot2")
+options(warn=-1)
+suppressWarnings(library("magrittr"))
+suppressWarnings(library("tidyr"))
+suppressWarnings(library("ggplot2"))
+suppressWarnings(library("readr"))
 ```
 
-```{r, echo=FALSE}
+```{r 1, warning=FALSE, cache=TRUE, include=FALSE}
 #Reading in the data
-user_data = read.csv('data/user_profile.csv')
+user_data <- read_csv("~/Data Mining/dataset/dataset/user_profile.csv")
 summary(user_data)
 
 #Removing columns that are redundant and cover the same information
@@ -51,42 +55,46 @@ data.pre = na.omit(data.pre)
 data.pre = data.pre[-c(31,32)]
 
 #reading in user engagement data
-user_engage_data = read.csv('data/user_engagement.csv')
+user_engage_data = read.csv('~/Data Mining/dataset/dataset/user_engagement.csv')
 
 #We are taking the click counts for differnt types of pages
 user_engage_actions = user_engage_data[c(21, 22, 23, 24, 25, 26)]
 ```
 
-Data set
+Dataset
 ===
 
-- The data was from Credit Sesame, a company that calculates credit scores to determine options for credit cards, mortgage rates and loans. This dataset included: 
-      -User Demographics - credit profile information including loan histories, tradeline details, etc, and a few personal features such as gender and location
-      -First Session Information - action logs of each user's first interaction with the Credit Sesame website
-      -30-day User Engagement Data - insight into the actions of users in each one's first 30 days which included various logins for each user
+- The data was from Credit Sesame, a company that calculates credit scores to determine options for credit cards, mortgage rates and loans. 
+- This dataset included: 
+      - User Demographics
+      - First Session Information
+      - 30-day User Engagement Data
 
-Dislay of Data Through Initial Exploration
+Our Research Direction
 ===
-```{r}
-#Plot histogram of each column in user_data
-data.pre %>% gather() %>% head()
-ggplot(gather(data.pre[seq(2,15)]), aes(value)) + 
+
+- We wanted to give Credit Sesame an insightful description of their user base
+- We believe that they would have an interest in the credit score of their users, since this helps the to predict the best loans, mortgages, etc.
+
+Exploring the Dataset
+===
+- We started out EDA by looking at the distribution of the variables in the datset
+- We found a significant right skew in the majority of the non-categorical data
+```{r 3, echo=FALSE, cache=TRUE, warning=FALSE, fig.width=9, fig.height=3}
+ggplot(gather(data.pre[c(2,5,13)]), aes(value)) + 
     geom_histogram(bins=10) + 
     facet_wrap(~key, scales = 'free_x')
-ggplot(gather(data.pre[seq(16,31)]), aes(value)) + 
-    geom_histogram(bins=10) + 
-    facet_wrap(~key, scales = 'free_x')
-``` 
-
-Exploring the Dataset 
-===
-- Started EDA by looking at the distribution of each of the variables in the dataset, as shown in the previous slide.
-- Almost all the non-categorical data was heavily skewed to the right.
-- Many variables had high frequency for lower values and significantly lower frequency for higher values
-- Only non-cateogrical variables not heavily skewed were `age` and `credit_score`. 
-
+```
 This was important to keep in mind as we proceeded in our analysis as the distribution of each variable can impact the results of our analysis methods.
 
+Exploring the Dataset
+===
+- Plots of Credit Score v. Some Features
+- Brief discussion of linear regression
+
+Exploring the Dataset
+===
+Add PCA biplots
 
 Challenges of the Dataset
 ===
@@ -97,102 +105,43 @@ Challenges of the Dataset
 Methods
 ===
 
-- We used several methods: PCA, Regression Analysis, and k-means clusterng
-- Our most successful method was the k-means clustering
-- To evalute this method, we compared how the data differed between the clusters
+- Linear Regression 
+    - We determined which features to use in the regression using the plots and PCA
+    - Only achieved an R-squared of .35, which is too low to draw meanginful conclusions
+    - COuld use other regression methods such as Lasso in the future
+- K-means clustering
+    - Split users into similar groups
+    - Compare within cluster averages to other clusters
+    - Find differences
+
+K-means
+===
+- How we determined how many K's
+CH INDEX
+- Some visualization for the clusters
 
 Results
 ===
 
-- After determining the number of clusters to use and accordingly performing the k-means clustering method, we noticed that in particular, there were two clusters which had relatively high values for `click_count_credit_card` and `click_count_personal_loan`, respectively as shown below:
-```{r, echo=FALSE}
-k.max <- 20
-data <- user_engage_actions
-wss <- sapply(1:k.max, 
-              function(k){kmeans(data, k, nstart=50,iter.max = 15 )$tot.withinss})
-#ploting the wws vs. number of clusters. 
-plot(1:k.max, wss,
-     type="b", pch = 19, frame = FALSE, 
-     xlab="Number of clusters K",
-     ylab="Total within-clusters sum of squares")
-
-set.seed(10)
-kmeanclusters = kmeans(user_engage_actions, 8, nstart=20)
-kmeanclusters$centers
-
-```
+- After determining the number of clusters to use and accordingly performing the k-means clustering method, we noticed that in particular, there were two clusters which had relatively high values for `click_count_credit_card` and `click_count_personal_loan.`
 
 
 Results (continued)
 ===
 
-- The users that were grouped into these two clusters had a noticeably large difference in the mean values for several different variables as shown below. Note that these variable values generally correspond to the user's frewuent actions on the Credit Sesame website.
-```{r, echo=FALSE}
-#from the clustering, we can see that there are two clusters with larger values in particular columns (see report for interpretation). We want the user IDs of the people who had the inflated column values. 
-click_credit_card = user_engage_data[which(kmeanclusters$cluster == 7),]
-click_personal_loan = user_engage_data[which(kmeanclusters$cluster == 4),]
-
-#creating a subset of user demographics that relate to the people with inflated column values
-click_credit_users = subset(data.pre, data.pre$user_id %in% click_credit_card$user_id)
-click_loan_users = subset(data.pre, data.pre$user_id %in% click_personal_loan$user_id)
-
-#comparing the user demographics of the two groups of people
-options(scipen=999)
-#add this to the appendix
-compare = matrix(c(mean(click_credit_users$is_homeowner), mean(click_loan_users$is_homeowner),
-                   mean(click_credit_users$gender), mean(click_loan_users$gender),
-                   mean(click_credit_users$tradelines_avg_days_since_opened), mean(click_loan_users$tradelines_avg_days_since_opened),
-                   mean(click_credit_users$tradelines_max_days_since_opened), mean(click_loan_users$tradelines_max_days_since_opened),
-                   mean(click_credit_users$tradelines_min_days_since_opened), mean(click_loan_users$tradelines_min_days_since_opened),
-                   mean(click_credit_users$count_tradelines_closed_accounts), mean(click_loan_users$count_tradelines_closed_accounts),
-                   mean(click_credit_users$count_total_tradelines_opened_24_months), mean(click_loan_users$count_total_tradelines_opened_24_months),
-                   mean(click_credit_users$count_tradelines_cc_opened_24_months), mean(click_loan_users$count_tradelines_cc_opened_24_months),
-                   mean(click_credit_users$count_tradelines_condition_derogatory), mean(click_loan_users$count_tradelines_condition_derogatory),
-                   mean(click_credit_users$count_open_installment_accounts_24_months), mean(click_loan_users$count_open_installment_accounts_24_months),
-                   mean(click_credit_users$count_tradelines_open_collection_accounts), mean(click_loan_users$count_tradelines_open_collection_accounts),
-                   mean(click_credit_users$count_tradelines_open_mortgages), mean(click_loan_users$count_tradelines_open_mortgages),
-                   mean(click_credit_users$count_tradelines_open_student_loans), mean(click_loan_users$count_tradelines_open_student_loans),
-                   mean(click_credit_users$count_tradelines_opened_accounts), mean(click_loan_users$count_tradelines_opened_accounts),
-                   mean(click_credit_users$count_tradelines_open_secured_loans), mean(click_loan_users$count_tradelines_open_secured_loans),
-                   mean(click_credit_users$count_tradelines_open_unsecured_loans), mean(click_loan_users$count_tradelines_open_unsecured_loans),
-                   mean(click_credit_users$total_tradelines_amount_past_due), mean(click_loan_users$total_tradelines_amount_past_due),
-                   mean(click_credit_users$total_open_cc_amount_past_due), mean(click_loan_users$total_open_cc_amount_past_due),
-                   mean(click_credit_users$total_cc_open_balance), mean(click_loan_users$total_cc_open_balance),
-                   mean(click_credit_users$total_tradelines_open_balance), mean(click_loan_users$total_tradelines_open_balance),
-                   mean(click_credit_users$max_cc_limit), mean(click_loan_users$max_cc_limit),
-                   mean(click_credit_users$total_mortgage_loans_amount), mean(click_loan_users$total_mortgage_loans_amount),
-                   mean(click_credit_users$total_mortgage_loans_balance), mean(click_loan_users$total_mortgage_loans_balance),
-                   mean(click_credit_users$total_auto_loans_balance), mean(click_loan_users$total_auto_loans_balance),
-                   mean(click_credit_users$total_student_loans_balance), mean(click_loan_users$total_student_loans_balance),
-                   mean(click_credit_users$count_inquiries_3_months), mean(click_loan_users$count_inquiries_3_months),
-                   mean(click_credit_users$count_inquiries_6_months), mean(click_loan_users$count_inquiries_6_months),
-                   mean(click_credit_users$count_inquiries_12_months), mean(click_loan_users$count_inquiries_12_months),
-                   mean(click_credit_users$count_bankruptcy), mean(click_loan_users$count_bankruptcy),
-                   mean(click_credit_users$age), mean(click_loan_users$age),
-                   mean(click_credit_users$credit_score), mean(click_loan_users$credit_score)),ncol = 2, byrow = TRUE)
-
-
-compare = matrix(c(
-                   mean(click_credit_users$count_tradelines_condition_derogatory), mean(click_loan_users$count_tradelines_condition_derogatory),
-                   mean(click_credit_users$count_tradelines_open_collection_accounts), mean(click_loan_users$count_tradelines_open_collection_accounts),
-                   mean(click_credit_users$total_tradelines_amount_past_due), mean(click_loan_users$total_tradelines_amount_past_due),
-                   mean(click_credit_users$total_open_cc_amount_past_due), mean(click_loan_users$total_open_cc_amount_past_due),
-                   mean(click_credit_users$total_cc_open_balance), mean(click_loan_users$total_cc_open_balance),
-                   mean(click_credit_users$total_tradelines_open_balance), mean(click_loan_users$total_tradelines_open_balance),
-                   mean(click_credit_users$max_cc_limit), mean(click_loan_users$max_cc_limit),
-                   mean(click_credit_users$total_mortgage_loans_amount), mean(click_loan_users$total_mortgage_loans_amount),
-                   mean(click_credit_users$total_mortgage_loans_balance), mean(click_loan_users$total_mortgage_loans_balance),
-                   mean(click_credit_users$total_auto_loans_balance), mean(click_loan_users$total_auto_loans_balance),
-                   mean(click_credit_users$credit_score), mean(click_loan_users$credit_score)),ncol = 2, byrow = TRUE)
-
-colnames(compare) = c("click_credit", "click_loan")
-rownames(compare) = names(click_credit_users[-c(1,2,3,4,5,6,7,8,9,11,13,14,15,16,17,26,27,28,29,30,31)])
-compare
-```
+- The users that were grouped into these two clusters had a noticeably large difference in the mean values for several different variables as shown below. Note that these variable values generally correspond to the user's frequent actions on the Credit Sesame website.
 
 Conclusions
 ===
 
-- Our PCA and Linear Regression Analysis both support the conclusion that longer opened accounts and higher credit card limits are two of the strongest indicators of credit scores. Additionally, homeowner status and number of accounts turned over to collection agencies as strong predictors of credit score.
-- Our k-means clustering concluded that Credit Sesame's website clientele that use the credit card links are different from the people who used the website for loans.
-- Future Work: Moving fowards, we can work to improve the current models that we used. For example, our regression model could've been improved using other regression methods such as Lasso or ElasticNet so we wouldn't have to do feature selection by hand. Additionally, we could've tried clustering by usuing hierarchical clustering to see if we could get more informative results. 
+- The k-means clustering allowed us to confirm that the demographics of people who use Credit Sesame's website differently and access different pages are in fact different 
+- There is a distinction between Credit Sesame's website clientele that uses the credit card features and those who use loan features
+    - The credit page users tend to have lower credit scores and the loan feature users tend to have higher loan amounts based on grouped findings
+    -	The largest difference between credit score users and loan feature users are open collection accounts, # of derogatory tradelines, max credit card limit, total credit card balance, and total mortgage loans and balance, which all happen to be strong indicators of credit score
+    
+Conclusions
+===
+
+-	We can work to improve the current models that we used
+    - Regression model can be improved using methods such as Lasso or ElasticNet to facilitate feature selection 
+    -	Hierarchal clustering could have provided more insight into potential variable groups
