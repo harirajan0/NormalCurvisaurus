@@ -128,7 +128,7 @@ Methods
 - Linear Regression 
     - We determined which features to use in the regression using the plots and PCA
     - Only achieved an R-squared of .35, which is too low to draw meanginful conclusions
-    - COuld use other regression methods such as Lasso in the future
+    - Could use other regression methods such as Lasso in the future
 - K-means clustering
     - Cluster users based on most frequent page type
     - Compare within cluster user demographics with those of other clusters
@@ -138,7 +138,7 @@ K-means
 ===
 - We use k-means because it is the quicker than hierarchical clustering, but we first need to define k. We look at the plot of k vs. WSS. 
 
-```{r, echo=FALSE, cache=TRUE, warning=FALSE, fig.height=6}
+```{r, echo=FALSE, cache=TRUE, warning=FALSE, fig.height=5}
 
 k.max <- 10
 data <- user_engage_actions
@@ -152,15 +152,15 @@ plot(1:k.max, wss,
 
 
 ```
-We use the Elbow method to determine the optimum number of k. There is clearly an elbow at k=6 where the WSS decreases at a much slower rate after we get to 6 and it decreasing relatively consistantly up until 6. We set k=6. 
+We use the Elbow method to determine the optimum number of k. 
 
 Results
 ===
 
 - After determining the number of clusters to use and accordingly performing the k-means clustering method, we noticed that in particular, there were two clusters which had relatively high values for `click_count_credit_card` and `click_count_personal_loan.`
 
-```{r, echo=FALSE, cache=TRUE, warning=FALSE, fig.height=6, size = 'tiny'}
-set.seed(1)
+```{r, echo=FALSE, warning=FALSE, fig.height=6, size = 'tiny'}
+set.seed(4)
 kmeanclusters = kmeans(user_engage_actions, 6, nstart=20)
 kmeanclusters$centers[,c(1,2)]
 ```
@@ -169,11 +169,11 @@ kmeanclusters$centers[,c(1,2)]
 Results (continued)
 ===
 
-```{r, echo=FALSE, cache=TRUE, warning=FALSE, fig.height=6}
+```{r, echo=FALSE, warning=FALSE, fig.height=6}
 
 click_credit_card = user_engage_data[which(kmeanclusters$cluster == 3),]
 
-click_personal_loan = user_engage_data[which(kmeanclusters$cluster == 6),]
+click_personal_loan = user_engage_data[which(kmeanclusters$cluster == 1),]
 
 
 #Removing columns that are redundant and cover the same information
@@ -225,10 +225,13 @@ plot(x, y, col = ifelse(allusers$is_credit == TRUE, 'blue', 'red'), xlab = 'PC1'
 
 ```
 
+There is a clear difference in the distribution of red dots (users clicking on credit pages) vs. distribution of blue dots (users clicking on loans). 
+
 Results (continued)
 ===
+The table below shows a comparison of the features that were relatively different between users who clicked credit and users who clicked loans. 
 
-```{r, echo=FALSE, cache=TRUE, warning=FALSE, fig.height=6}
+```{r, echo=FALSE, warning=FALSE, fig.height=6}
 options(scipen=999)
 
 compare = matrix(c(mean(click_credit_users$count_tradelines_open_collection_accounts), mean(click_loan_users$count_tradelines_open_collection_accounts),
@@ -240,7 +243,11 @@ compare = matrix(c(mean(click_credit_users$count_tradelines_open_collection_acco
 
 
 colnames(compare) = c("click_credit", "click_loan")
-rownames(compare) = names(click_credit_users[c(11, 17, 19, 21, 25, 32)])
+
+
+
+rownames(compare) = c('open_installment_acc', 'unsecured_open_tradelines', 'open_cc_amount_past_due', 'tradelines_open_balance', 'auto_loans_balance', 'credit_score')
+  #names(click_credit_users[c(11, 17, 19, 21, 25, 32)])
 compare
 ```
 
@@ -248,14 +255,9 @@ compare
 Conclusions
 ===
 
-- The k-means clustering allowed us to confirm that the demographics of people who use Credit Sesame's website differently and access different pages are in fact different 
-- There is a distinction between Credit Sesame's website clientele that uses the credit card features and those who use loan features
-    - The credit page users tend to have lower credit scores and the loan feature users tend to have higher loan amounts based on grouped findings
-    -	The largest difference between credit score users and loan feature users are open collection accounts, # of derogatory tradelines, max credit card limit, total credit card balance, and total mortgage loans and balance, which all happen to be strong indicators of credit score
-    
-Conclusions
-===
-
--	We can work to improve the current models that we used
-    - Regression model can be improved using methods such as Lasso or ElasticNet to facilitate feature selection 
-    -	Hierarchal clustering could have provided more insight into potential variable groups
+- Our regression model was inconclusive
+- The k-means clustering confirmed the demographics of people using Credit Sesame's website differentiate across features 
+- There is a distinction between clientele that uses the credit card features and loan features
+- Future Work:
+    - We could create improved regression models using techniques such as Lasso 
+    - Hierarchal clustering could have provided more insight into potential variable groups
